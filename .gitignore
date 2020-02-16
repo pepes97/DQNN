@@ -7,6 +7,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Archives
+*.zip
+
 # Distribution / packaging
 .Python
 build/
@@ -133,6 +136,9 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+#Ide folder
+.vscode
 
 # file in the Dataset
 Dataset/TAU Dataset
