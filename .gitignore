@@ -10,6 +10,11 @@ __pycache__/
 # Archives
 *.zip
 
+Dataset/foa_dev.z01
+Dataset/foa_dev.z02
+Dataset/LICENSE
+Dataset/README.html
+
 # Distribution / packaging
 .Python
 build/
