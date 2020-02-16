@@ -4,22 +4,23 @@ os.chdir("foa_dev")
 file_list = os.listdir()
 file_list.sort()
 
-ovo = 2
-ov = f"ov{ovo}"
-splito = 4
-split = f"split{splito}"
-try:
-  os.mkdir(f"wav_ov{ovo}_split{splito}_30db")
-  os.mkdir(f"desc_ov{ovo}_split{splito}")
-except FileExistsError:
-  pass
+for ovo in [1, 2]:
+  ov = f"ov{ovo}"
+  for splito in [1,2,3,4]:
+    
+    split = f"split{splito}"
+    try:
+      os.mkdir(f"wav_ov{ovo}_split{splito}_30db")
+      os.mkdir(f"desc_ov{ovo}_split{splito}")
+    except FileExistsError:
+      pass
 
-for f in file_list:
-
-  print(f)
-  os.rename(f, f"wav_ov{ovo}_split{splito}_30db/{f}")
-  print(f[:-4])
-  os.rename(f"../metadata_dev/{f[:-4]}.csv", f"desc_ov{ovo}_split{splito}/{f[:-4]}.csv")
+    for f in file_list:
+      if ov in f and split in f:
+        print(f)
+        os.rename(f, f"wav_ov{ovo}_split{splito}_30db/{f}")
+        print(f[:-4])
+        os.rename(f"../metadata_dev/{f[:-4]}.csv", f"desc_ov{ovo}_split{splito}/{f[:-4]}.csv")
 
 
 

@@ -6,8 +6,8 @@ import cls_feature_class
 dataset_name = 'ansim'  # Datasets: ansim, resim, cansim, cresim and real
 
 # Extracts feature and labels for all overlap and splits
-for ovo in [2]:  # SE overlap
-    for splito in [4]:    # all splits. Use [1, 8, 9] for 'real' dataset
+for ovo in [1,2]:  # SE overlap
+    for splito in [1, 2, 3, 4]:    # all splits. Use [1, 8, 9] for 'real' dataset
         for nffto in [512]:
             feat_cls = cls_feature_class.FeatureClass(ov=ovo, split=splito, nfft=nffto, dataset=dataset_name)
 
