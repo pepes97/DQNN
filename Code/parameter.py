@@ -13,8 +13,8 @@ def get_params(argv):
 
         # Dataset loading parameters
         dataset='tau',     # Dataset to use: ansim, resim, cansim, cresim, real
-        overlap=2,         # maximum number of overlapping sound events [1, 2, 3]
-        split=4,           # Cross validation split [1, 2, 3]
+        overlap=1,         # maximum number of overlapping sound events [1, 2, 3]
+        split=1,           # Cross validation split [1, 2, 3]
         db=30,             # SNR of sound events.
         nfft=512,          # FFT/window length size
 
@@ -81,9 +81,47 @@ def get_params(argv):
         params['sequence_length'] = 64
         params['batch_size'] = 32
 
+    ## Added by Marco Pennese
+    # Configs to train over a specific subset of the dataset
+    elif argv == '11':
+        params['overlap'] = 1
+        params['split'] = 1
+    
+    elif argv == '12':
+        params['overlap'] = 1
+        params['split'] = 2
+    
+    elif argv == '13':
+        params['overlap'] = 1
+        params['split'] = 3
+    
+    elif argv == '14':
+        params['overlap'] = 1
+        params['split'] = 4
+    
+    elif argv == '21':
+        params['overlap'] = 2
+        params['split'] = 1
+    
+    elif argv == '22':
+        params['overlap'] = 2
+        params['split'] = 2
+    
+    elif argv == '23':
+        params['overlap'] = 2
+        params['split'] = 3
+    
+    elif argv == '24':
+        params['overlap'] = 2
+        params['split'] = 4
+    
+
+
     else:
         print('ERROR: unknown argument {}'.format(argv))
         exit()
+
+    
 
     for key, value in params.items():
         print("{}: {}".format(key, value))
