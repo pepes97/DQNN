@@ -14,7 +14,8 @@ import utils
 import time
 from IPython import embed
 plot.switch_backend('agg')
-
+from datetime import datetime
+import tensorflow as tf
 
 def collect_test_labels(_data_gen_test, _data_out, classification_mode, quick_test):
     # Collecting ground truth for test data
@@ -141,6 +142,9 @@ def main(argv):
         print('Using default inputs for now')
         print('-------------------------------------------------------------------------------------------------------')
         print('\n\n')
+
+    
+
     # use parameter set defined by user
     task_id = '1' if len(argv) < 3 else argv[-1]
     params = parameter.get_params(task_id)
@@ -155,6 +159,9 @@ def main(argv):
     )
     unique_name = os.path.join(model_dir, unique_name)
     print("unique_name: {}\n".format(unique_name))
+
+    logdir = "logs/scalars/" + unique_name+ "_" +datetime.now().strftime("%Y%m%d-%H%M%S")
+    file_writer = tf.summary.FileWriter(logdir + "/metrics")
 
     data_gen_train = cls_data_generator.DataGenerator(
         dataset=params['dataset'], ov=params['overlap'], split=params['split'], db=params['db'], nfft=params['nfft'],
@@ -206,6 +213,7 @@ def main(argv):
     epoch_metric_loss = np.zeros(params['nb_epochs'])
     sed_score=np.zeros(params['nb_epochs'])
     doa_score=np.zeros(params['nb_epochs'])
+    seld_score=np.zeros(params['nb_epochs'])
     tr_loss = np.zeros(params['nb_epochs'])
     val_loss = np.zeros(params['nb_epochs'])
     doa_loss = np.zeros((params['nb_epochs'], 6))
@@ -251,7 +259,8 @@ def main(argv):
 #            )
             sed_score[epoch_cnt] = np.mean([sed_loss[epoch_cnt, 0], 1-sed_loss[epoch_cnt, 1]])
             doa_score[epoch_cnt] = np.mean([2*np.arcsin(doa_loss[epoch_cnt, 1]/2.0)/np.pi, 1 - (doa_loss[epoch_cnt, 5] / float(doa_gt.shape[0]))])
-        
+            seld_score[epoch_cnt] = np.mean([sed_score[epoch_cnt], doa_score[epoch_cnt]])
+
         #plot_functions(unique_name, tr_loss, val_loss, sed_loss, doa_loss, epoch_metric_loss)
         plot_functions(unique_name, tr_loss, val_loss, sed_loss, doa_loss, sed_score, doa_score)
 
@@ -262,13 +271,15 @@ def main(argv):
 #            best_epoch = epoch_cnt
 #            model.save('{}_model.h5'.format(unique_name))
 #            patience_cnt = 0
-        if sed_score[epoch_cnt] < best_metric:
-            best_metric = sed_score[epoch_cnt]
+        if seld_score[epoch_cnt] < best_metric:
+            best_metric = seld_score[epoch_cnt]
             best_conf_mat = conf_mat
             best_epoch = epoch_cnt
             model.save('{}_model.h5'.format(unique_name))
             patience_cnt = 0
-            
+        
+        if patience_cnt > params['patience']:
+            break   
 #        print(
 #            'epoch_cnt: %d, time: %.2fs, tr_loss: %.2f, val_loss: %.2f, '
 #            'F1_overall: %.2f, ER_overall: %.2f, '
@@ -281,6 +292,20 @@ def main(argv):
 #                epoch_metric_loss[epoch_cnt], best_metric, best_epoch
 #            )
 #        )
+        tf.summary.scalar('time', time.time() - start)
+        tf.summary.scalar('tr_loss', tr_loss[epoch_cnt])
+        tf.summary.scalar('val_loss', val_loss[epoch_cnt])
+        tf.summary.scalar('F1_overall', sed_loss[epoch_cnt, 1])
+        tf.summary.scalar('ER_overall', sed_loss[epoch_cnt, 0])
+        tf.summary.scalar('doa_error_gt', doa_loss[epoch_cnt, 1])
+        tf.summary.scalar('doa_error_pred', doa_loss[epoch_cnt, 2])
+        tf.summary.scalar('good_pks_ratio', doa_loss[epoch_cnt, 5] / float(sed_gt.shape[0]))
+        tf.summary.scalar('sed_score', sed_score[epoch_cnt])
+        tf.summary.scalar('doa_score', doa_score[epoch_cnt])
+        tf.summary.scalar('seld_score', seld_score[epoch_cnt])
+        tf.summary.scalar('best_error_metric', best_metric)
+        tf.summary.scalar('best_epoch', best_epoch)
+        
         print('epoch_cnt: %d, time: %.2fs, tr_loss: %.2f, val_loss: %.2f, '
             'F1_overall: %.2f, ER_overall: %.2f, '
             'doa_error_gt: %.2f, doa_error_pred: %.2f, good_pks_ratio:%.2f, '
