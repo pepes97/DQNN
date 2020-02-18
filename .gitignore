@@ -9,6 +9,8 @@ __pycache__/
 
 # Archives
 *.zip
+*.wav
+*.csv
 
 Dataset/foa_dev.z01
 Dataset/foa_dev.z02
