@@ -12,6 +12,9 @@ __pycache__/
 *.wav
 *.csv
 
+Code/logs
+Code/json_logs
+
 Dataset/foa_dev.z01
 Dataset/foa_dev.z02
 Dataset/LICENSE
