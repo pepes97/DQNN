@@ -16,6 +16,11 @@ from IPython import embed
 plot.switch_backend('agg')
 from datetime import datetime
 import tensorflow as tf
+import argparse
+from load_json import JSON_Manager
+from keras.models import load_model
+from complexnn import QuaternionConv2D, QuaternionGRU, QuaternionDense
+
 
 def collect_test_labels(_data_gen_test, _data_out, classification_mode, quick_test):
     # Collecting ground truth for test data
@@ -122,7 +127,7 @@ def plot_functions(fig_name, _tr_loss, _val_loss, _sed_loss, _doa_loss, _sed_sco
     plot.close()
 
 
-def main(argv):
+def main(args):
     """
     Main wrapper for training sound event localization and detection network.
     
@@ -131,37 +136,32 @@ def main(argv):
         second input: task_id - (optional) To chose the system configuration in parameters.py. 
                                 (default) uses default parameters
     """
-    if len(argv) != 3:
-        print('\n\n')
-        print('-------------------------------------------------------------------------------------------------------')
-        print('The code expected two inputs')
-        print('\t>> python seld.py <job-id> <task-id>')
-        print('\t\t<job-id> is a unique identifier which is used for output filenames (models, training plots). '
-              'You can use any number or string for this.')
-        print('\t\t<task-id> is used to choose the user-defined parameter set from parameter.py')
-        print('Using default inputs for now')
-        print('-------------------------------------------------------------------------------------------------------')
-        print('\n\n')
-
     
-
     # use parameter set defined by user
-    task_id = '1' if len(argv) < 3 else argv[-1]
+    task_id = args.params
     params = parameter.get_params(task_id)
 
-    job_id = 1 if len(argv) < 2 else argv[1]
+    job_id = args.model_name
 
-    model_dir = 'models/'
+    model_dir = 'models/'+args.author+'/' if args.author!="" else 'models/'
     utils.create_folder(model_dir)
     unique_name = '{}_ov{}_split{}_{}{}_3d{}_{}'.format(
         params['dataset'], params['overlap'], params['split'], params['mode'], params['weakness'],
         int(params['cnn_3d']), job_id
     )
+
+    model_name = unique_name
+
+    epoch_manager = JSON_Manager(args.author, unique_name)
+    logdir = "logs/"+args.author+"/"+ unique_name
+    
     unique_name = os.path.join(model_dir, unique_name)
     print("unique_name: {}\n".format(unique_name))
 
-    logdir = "logs/scalars/" + unique_name+ "_" +datetime.now().strftime("%Y%m%d-%H%M%S")
-    file_writer = tf.summary.FileWriter(logdir + "/metrics")
+    
+    session = tf.InteractiveSession()
+    
+    file_writer = tf.summary.FileWriter(logdir, session.graph)
 
     data_gen_train = cls_data_generator.DataGenerator(
         dataset=params['dataset'], ov=params['overlap'], split=params['split'], db=params['db'], nfft=params['nfft'],
@@ -205,11 +205,21 @@ def main(argv):
                                   nb_cnn2d_filt=params['nb_cnn2d_filt'], pool_size=params['pool_size'],
                                   rnn_size=params['rnn_size'], fnn_size=params['fnn_size'],
                                   classification_mode=params['mode'], weights=params['loss_weights'])
-    best_metric = 99999
+    
+    initial = epoch_manager.get_epoch()
+    if initial!=0:
+        print(f"Resume training from epoch {initial}")
+        print("Loading already trained model...")
+        # In order to load custom layers we need to link the references to the custom objects
+        model = load_model(os.path.join(model_dir, model_name+"_model.h5"), custom_objects={'QuaternionConv2D': QuaternionConv2D,
+                                                                                        'QuaternionGRU':QuaternionGRU,
+                                                                                        'QuaternionDense': QuaternionDense})
+
+    best_metric = epoch_manager.get_best_metric()
     conf_mat = None
-    best_conf_mat = None
-    best_epoch = -1
-    patience_cnt = 0
+    best_conf_mat = epoch_manager.get_best_conf_mat()
+    best_epoch = epoch_manager.get_best_epoch()
+    patience_cnt = epoch_manager.get_patience_cnt()
     epoch_metric_loss = np.zeros(params['nb_epochs'])
     sed_score=np.zeros(params['nb_epochs'])
     doa_score=np.zeros(params['nb_epochs'])
@@ -218,7 +228,49 @@ def main(argv):
     val_loss = np.zeros(params['nb_epochs'])
     doa_loss = np.zeros((params['nb_epochs'], 6))
     sed_loss = np.zeros((params['nb_epochs'], 2))
-    for epoch_cnt in range(params['nb_epochs']):
+
+    time_hold = tf.placeholder(tf.float32, shape=None, name='time_summary')
+    time_summ = tf.summary.scalar('time', time_hold)
+
+    tr_loss_hold = tf.placeholder(tf.float32, shape=None, name='tr_loss_summary')        
+    tr_loss_summ = tf.summary.scalar('tr_loss', tr_loss_hold)
+
+    val_loss_hold = tf.placeholder(tf.float32, shape=None, name='val_loss_summary')
+    val_loss_summ = tf.summary.scalar('val_loss', val_loss_hold)
+
+    f1_hold = tf.placeholder(tf.float32, shape=None, name='f1_summary')
+    f1_summ = tf.summary.scalar('F1_overall', f1_hold)
+    
+    er_hold = tf.placeholder(tf.float32, shape=None, name='er_summary') 
+    er_summ = tf.summary.scalar('ER_overall', er_hold)
+
+    doa_error_gt_hold = tf.placeholder(tf.float32, shape=None, name='doa_error_gt_summary')  
+    doa_error_gt_summ = tf.summary.scalar('doa_error_gt', doa_error_gt_hold)
+
+    doa_error_pred_hold = tf.placeholder(tf.float32, shape=None, name='doa_error_pred_summary')
+    doa_error_pred_summ = tf.summary.scalar('doa_error_pred', doa_error_pred_hold)
+    
+    good_pks_hold = tf.placeholder(tf.float32, shape=None, name='good_pks_summary') 
+    good_pks_summ = tf.summary.scalar('good_pks_ratio', good_pks_hold)
+    
+    sed_score_hold = tf.placeholder(tf.float32, shape=None, name='sed_score_summary') 
+    sed_score_summ = tf.summary.scalar('sed_score', sed_score_hold)
+
+    doa_score_hold = tf.placeholder(tf.float32, shape=None, name='doa_score_summary') 
+    doa_score_summ = tf.summary.scalar('doa_score', doa_score_hold)
+
+    seld_score_hold = tf.placeholder(tf.float32, shape=None, name='seld_score_summary') 
+    seld_score_summ = tf.summary.scalar('seld_score', seld_score_hold)
+
+    best_error_metric_hold = tf.placeholder(tf.float32, shape=None, name='best_error_metric_summary') 
+    best_error_metric_summ = tf.summary.scalar('best_error_metric', best_error_metric_hold)
+
+    best_epoch_hold = tf.placeholder(tf.float32, shape=None, name='best_epoch_summary') 
+    best_epoch_summ = tf.summary.scalar('best_epoch', best_epoch_hold)
+    
+    merged = tf.summary.merge_all()
+
+    for epoch_cnt in range(initial, params['nb_epochs']):
         start = time.time()
         hist = model.fit_generator(
             generator=data_gen_train.generate(),
@@ -251,61 +303,49 @@ def main(argv):
                 doa_loss[epoch_cnt, :], conf_mat = evaluation_metrics.compute_doa_scores_regr_xyz(doa_pred, doa_gt,
                                                                                                   sed_pred, sed_gt)
 
-#            epoch_metric_loss[epoch_cnt] = np.mean([
-#                sed_loss[epoch_cnt, 0],
-#                1-sed_loss[epoch_cnt, 1],
-#                2*np.arcsin(doa_loss[epoch_cnt, 1]/2.0)/np.pi,
-#                1 - (doa_loss[epoch_cnt, 5] / float(doa_gt.shape[0]))]
-#            )
             sed_score[epoch_cnt] = np.mean([sed_loss[epoch_cnt, 0], 1-sed_loss[epoch_cnt, 1]])
             doa_score[epoch_cnt] = np.mean([2*np.arcsin(doa_loss[epoch_cnt, 1]/2.0)/np.pi, 1 - (doa_loss[epoch_cnt, 5] / float(doa_gt.shape[0]))])
             seld_score[epoch_cnt] = np.mean([sed_score[epoch_cnt], doa_score[epoch_cnt]])
 
-        #plot_functions(unique_name, tr_loss, val_loss, sed_loss, doa_loss, epoch_metric_loss)
         plot_functions(unique_name, tr_loss, val_loss, sed_loss, doa_loss, sed_score, doa_score)
 
         patience_cnt += 1
-#        if epoch_metric_loss[epoch_cnt] < best_metric:
-#            best_metric = epoch_metric_loss[epoch_cnt]
-#            best_conf_mat = conf_mat
-#            best_epoch = epoch_cnt
-#            model.save('{}_model.h5'.format(unique_name))
-#            patience_cnt = 0
+        epoch_manager.increase_patience_cnt()
+
+        model.save('{}_model.h5'.format(unique_name))
+        
         if seld_score[epoch_cnt] < best_metric:
             best_metric = seld_score[epoch_cnt]
+            epoch_manager.set_best_metric(best_metric)
+            
             best_conf_mat = conf_mat
+            epoch_manager.set_best_conf_mat(conf_mat)
+
             best_epoch = epoch_cnt
-            model.save('{}_model.h5'.format(unique_name))
+            epoch_manager.set_best_epoch(best_epoch)
+            
+            model.save('{}_best_model.h5'.format(unique_name))
             patience_cnt = 0
+            epoch_manager.reset_patience_cnt()
         
         if patience_cnt > params['patience']:
-            break   
-#        print(
-#            'epoch_cnt: %d, time: %.2fs, tr_loss: %.2f, val_loss: %.2f, '
-#            'F1_overall: %.2f, ER_overall: %.2f, '
-#            'doa_error_gt: %.2f, doa_error_pred: %.2f, good_pks_ratio:%.2f, '
-#            'error_metric: %.2f, best_error_metric: %.2f, best_epoch : %d' %
-#            (
-#                epoch_cnt, time.time() - start, tr_loss[epoch_cnt], val_loss[epoch_cnt],
-#                sed_loss[epoch_cnt, 1], sed_loss[epoch_cnt, 0],
-#                doa_loss[epoch_cnt, 1], doa_loss[epoch_cnt, 2], doa_loss[epoch_cnt, 5] / float(sed_gt.shape[0]),
-#                epoch_metric_loss[epoch_cnt], best_metric, best_epoch
-#            )
-#        )
-        tf.summary.scalar('time', time.time() - start)
-        tf.summary.scalar('tr_loss', tr_loss[epoch_cnt])
-        tf.summary.scalar('val_loss', val_loss[epoch_cnt])
-        tf.summary.scalar('F1_overall', sed_loss[epoch_cnt, 1])
-        tf.summary.scalar('ER_overall', sed_loss[epoch_cnt, 0])
-        tf.summary.scalar('doa_error_gt', doa_loss[epoch_cnt, 1])
-        tf.summary.scalar('doa_error_pred', doa_loss[epoch_cnt, 2])
-        tf.summary.scalar('good_pks_ratio', doa_loss[epoch_cnt, 5] / float(sed_gt.shape[0]))
-        tf.summary.scalar('sed_score', sed_score[epoch_cnt])
-        tf.summary.scalar('doa_score', doa_score[epoch_cnt])
-        tf.summary.scalar('seld_score', seld_score[epoch_cnt])
-        tf.summary.scalar('best_error_metric', best_metric)
-        tf.summary.scalar('best_epoch', best_epoch)
-        
+            break
+
+        summary = session.run(merged, feed_dict={time_hold: time.time() - start,
+                                                tr_loss_hold: tr_loss[epoch_cnt],
+                                                val_loss_hold: val_loss[epoch_cnt],
+                                                f1_hold: sed_loss[epoch_cnt, 1],
+                                                er_hold: sed_loss[epoch_cnt, 0],
+                                                doa_error_gt_hold: doa_loss[epoch_cnt, 1],
+                                                doa_error_pred_hold: doa_loss[epoch_cnt, 2],
+                                                good_pks_hold: doa_loss[epoch_cnt, 5] / float(sed_gt.shape[0]),
+                                                sed_score_hold: sed_score[epoch_cnt],
+                                                doa_score_hold: doa_score[epoch_cnt],
+                                                seld_score_hold: seld_score[epoch_cnt],
+                                                best_error_metric_hold: best_metric,
+                                                best_epoch_hold: best_epoch})
+        file_writer.add_summary(summary, epoch_cnt)
+
         print('epoch_cnt: %d, time: %.2fs, tr_loss: %.2f, val_loss: %.2f, '
             'F1_overall: %.2f, ER_overall: %.2f, '
             'doa_error_gt: %.2f, doa_error_pred: %.2f, good_pks_ratio:%.2f, '
@@ -317,8 +357,8 @@ def main(argv):
                 sed_score[epoch_cnt], doa_score[epoch_cnt], best_metric, best_epoch
             )
         )
+        epoch_manager.increase_epoch()
     
-    #plot_functions(unique_name, tr_loss, val_loss, sed_loss, doa_loss, sed_score, doa_score, epoch_cnt)
     print('best_conf_mat : {}'.format(best_conf_mat))
     print('best_conf_mat_diag : {}'.format(np.diag(best_conf_mat)))
     print('saved model for the best_epoch: {} with best_metric: {},  '.format(best_epoch, best_metric))
@@ -330,6 +370,24 @@ def main(argv):
 
 if __name__ == "__main__":
     try:
-        sys.exit(main(sys.argv))
+        print('-------------------------------------------------------------------------------------------------------')
+        print('The code expected two inputs')
+        print('\t>> python seld.py <job-id> --params <task-id>')
+        print('\t\t<job-id> is a unique identifier which is used for output filenames (models, training plots). '
+              'You can use any number or string for this.')
+        print('\t\t<task-id> is used to choose the user-defined parameter set from parameter.py')
+        print('Using default inputs for now')
+        print('-------------------------------------------------------------------------------------------------------')
+        
+        parser = argparse.ArgumentParser(description='Train a SELDnet')
+        parser.add_argument("model_name", type=str, help="Name of the model. If already exists continue the training")
+        parser.add_argument('--author', default="", type=str, help="name of the author")
+        parser.add_argument('--params', default=1, type=int, help="parameters:\n"
+                                                                    "10  ov1 - "
+                                                                    "20  ov2 - "
+                                                                    "999 quick test")
+        args = parser.parse_args()
+        print(args)
+        sys.exit(main(args))
     except (ValueError, IOError) as e:
         sys.exit(e)
