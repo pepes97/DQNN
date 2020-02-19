@@ -323,7 +323,7 @@ def main(args):
 
             best_epoch = epoch_cnt
             epoch_manager.set_best_epoch(best_epoch)
-            
+
             model.save('{}_best_model.h5'.format(unique_name))
             patience_cnt = 0
             epoch_manager.reset_patience_cnt()
@@ -372,7 +372,7 @@ if __name__ == "__main__":
     try:
         print('-------------------------------------------------------------------------------------------------------')
         print('The code expected two inputs')
-        print('\t>> python seld.py <job-id> --params <task-id>')
+        print('\t>> python seld.py <job-id> --author <name> --params <task-id>')
         print('\t\t<job-id> is a unique identifier which is used for output filenames (models, training plots). '
               'You can use any number or string for this.')
         print('\t\t<task-id> is used to choose the user-defined parameter set from parameter.py')
