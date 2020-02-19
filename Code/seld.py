@@ -216,12 +216,14 @@ def main(args):
                                                                                         'QuaternionDense': QuaternionDense})
 
     best_metric = epoch_manager.get_best_metric()
+    best_std = epoch_manager.get_best_std()
     conf_mat = None
     best_conf_mat = epoch_manager.get_best_conf_mat()
     best_epoch = epoch_manager.get_best_epoch()
     patience_cnt = epoch_manager.get_patience_cnt()
     epoch_metric_loss = np.zeros(params['nb_epochs'])
     sed_score=np.zeros(params['nb_epochs'])
+    std_score=np.zeros(params['nb_epochs'])
     doa_score=np.zeros(params['nb_epochs'])
     seld_score=np.zeros(params['nb_epochs'])
     tr_loss = np.zeros(params['nb_epochs'])
@@ -262,11 +264,17 @@ def main(args):
     seld_score_hold = tf.placeholder(tf.float32, shape=None, name='seld_score_summary') 
     seld_score_summ = tf.summary.scalar('seld_score', seld_score_hold)
 
+    std_score_hold = tf.placeholder(tf.float32, shape=None, name='std_score_summary') 
+    std_score_summ = tf.summary.scalar('std_score', std_score_hold)
+
     best_error_metric_hold = tf.placeholder(tf.float32, shape=None, name='best_error_metric_summary') 
     best_error_metric_summ = tf.summary.scalar('best_error_metric', best_error_metric_hold)
 
     best_epoch_hold = tf.placeholder(tf.float32, shape=None, name='best_epoch_summary') 
     best_epoch_summ = tf.summary.scalar('best_epoch', best_epoch_hold)
+
+    best_std_hold = tf.placeholder(tf.float32, shape=None, name='best_std_summary') 
+    best_std_summ = tf.summary.scalar('best_std', best_std_hold)
     
     merged = tf.summary.merge_all()
 
@@ -307,6 +315,9 @@ def main(args):
             doa_score[epoch_cnt] = np.mean([2*np.arcsin(doa_loss[epoch_cnt, 1]/2.0)/np.pi, 1 - (doa_loss[epoch_cnt, 5] / float(doa_gt.shape[0]))])
             seld_score[epoch_cnt] = np.mean([sed_score[epoch_cnt], doa_score[epoch_cnt]])
 
+            # standard deviation
+            std_score[epoch_cnt] = np.std([sed_score[epoch_cnt], doa_score[epoch_cnt]])
+
         plot_functions(unique_name, tr_loss, val_loss, sed_loss, doa_loss, sed_score, doa_score)
 
         patience_cnt += 1
@@ -318,6 +329,9 @@ def main(args):
             best_metric = seld_score[epoch_cnt]
             epoch_manager.set_best_metric(best_metric)
             
+            best_std = std_score[epoch_cnt]
+            epoch_manager.set_best_std(best_std)
+
             best_conf_mat = conf_mat
             epoch_manager.set_best_conf_mat(conf_mat)
 
@@ -343,22 +357,25 @@ def main(args):
                                                 sed_score_hold: sed_score[epoch_cnt],
                                                 doa_score_hold: doa_score[epoch_cnt],
                                                 seld_score_hold: seld_score[epoch_cnt],
+                                                std_score_hold: std_score[epoch_cnt],
                                                 best_error_metric_hold: best_metric,
-                                                best_epoch_hold: best_epoch})
+                                                best_epoch_hold: best_epoch,
+                                                best_std_hold: best_std})
         file_writer.add_summary(summary, epoch_cnt)
 
         print('epoch_cnt: %d, time: %.2fs, tr_loss: %.2f, val_loss: %.2f, '
             'F1_overall: %.2f, ER_overall: %.2f, '
             'doa_error_gt: %.2f, doa_error_pred: %.2f, good_pks_ratio:%.2f, '
-            'sed_score: %.2f, doa_score: %.2f, best_error_metric: %.2f, best_epoch : %d' %
+            'sed_score: %.2f, doa_score: %.2f, best_error_metric: %.2f, best_epoch : %d, best_std: %.2f' %
             (
                 epoch_cnt, time.time() - start, tr_loss[epoch_cnt], val_loss[epoch_cnt],
                 sed_loss[epoch_cnt, 1], sed_loss[epoch_cnt, 0],
                 doa_loss[epoch_cnt, 1], doa_loss[epoch_cnt, 2], doa_loss[epoch_cnt, 5] / float(sed_gt.shape[0]),
-                sed_score[epoch_cnt], doa_score[epoch_cnt], best_metric, best_epoch
+                sed_score[epoch_cnt], doa_score[epoch_cnt], best_metric, best_epoch, best_std
             )
         )
         epoch_manager.increase_epoch()
+    lower_confidence, upper_confidence = evaluation_metrics.compute_confidence_interval(best_metric,best_std, params['nb_epochs'], confid_coeff=1.96) # 1.96 for a 95% CI
     
     print("\n----  FINISHED TRAINING  ----\n")
 
@@ -368,6 +385,7 @@ def main(args):
     print('DOA Metrics: doa_loss_gt: {}, doa_loss_pred: {}, good_pks_ratio: {}'.format(
         doa_loss[best_epoch, 1], doa_loss[best_epoch, 2], doa_loss[best_epoch, 5] / float(sed_gt.shape[0])))
     print('SED Metrics: ER_overall: {}, F1_overall: {}'.format(sed_loss[best_epoch, 0], sed_loss[best_epoch, 1]))
+    print('Confidence Interval: lower_interval: {}, upper_inteval: {}'.format(lower_confidence,upper_confidence))
     print('unique_name: {} '.format(unique_name))
 
 

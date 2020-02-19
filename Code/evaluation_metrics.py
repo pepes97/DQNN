@@ -6,6 +6,7 @@
 import numpy as np
 from sklearn.metrics import confusion_matrix
 from IPython import embed
+import math
 
 eps = np.finfo(np.float).eps
 
@@ -268,3 +269,7 @@ def compute_doa_scores_regr_xyz(pred, gt, pred_sed, gt_sed):
     er_metric = [avg_accuracy, doa_loss_gt, doa_loss_pred, doa_loss_gt_cnt, doa_loss_pred_cnt, good_frame_cnt]
     return er_metric, conf_mat
 
+def compute_confidence_interval(mean, std, num, confid_coeff):
+    lower = mean - (confid_coeff * (std/math.sqrt(num)))
+    upper = mean + (confid_coeff * (std/math.sqrt(num)))
+    return lower,upper

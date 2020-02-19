@@ -24,8 +24,10 @@ class JSON_Manager:
             data = {'epochs': 0,
                     'patience_cnt': 0,
                     'best_metric': 99999,
+                    'best_std':99999,
                     'best_conf_mat':None,
-                    'best_epoch': -1}
+                    'best_epoch': -1
+                    }
 
         self.data = data
         print(data)
@@ -58,6 +60,13 @@ class JSON_Manager:
 
     def set_best_metric(self, value):
         self.data['best_metric'] = value
+        self._save()
+
+    def get_best_std(self):
+        return self.data['best_std']
+
+    def set_best_std(self, value):
+        self.data['best_std'] = value
         self._save()
 
     def get_best_conf_mat(self):
