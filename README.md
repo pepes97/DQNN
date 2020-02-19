@@ -45,16 +45,30 @@ This adds the extracted features to the TAU Dataset folder.
 ## Train
 Once you have extracted the features you can train the network
 ```bash
-python3 ./seld.py <job-id> <task-id>
+python3 ./seld.py <name> --author <author> --params <params_num>
 ```
 <ul>
-<li><b>job-id</b> : is the name used to save models, etc...</li> 
-<li><b>task-id</b> : is a number referred to the configurations used (<b>999</b> for quick test)</li>
+<li><b>name</b> : is the name used to save the model and other info. If the name already exists it continues the training from the saved epoch, with saved info (metrics, etc..).
+<li><b>author</b> : is the name of the person who runs the training</li> 
+<li><b>params_num</b> : is a number referred to the configurations used (<b>999</b> for quick test, <b>10</b> for ov1, <b>20</b> for ov2). It is possible to implement other configurations (TO DO).</li>
 </ul>
-</br>
-</br>
 
-This runs the default configs
+## Tensorboard
+To visualize the plots we use Tensorboard
 ```bash
-python3 ./seld.py
+tensorboard --logdir ./logs
+```
+```bash
+tensorboard --logdir ./Code/logs
+```
+<b>logdir</b> : logdir depends on where you are
+
+## Tensorboard on Colab
+This loads the extension in Colab
+```bash
+%load_ext tensorboard
+```
+This opens the window of tensorboard (inside Colab you have to run this <b>before</b> run the training, in this way you can see the progresses in real time)
+```bash 
+%tensorboard --logdir ./logs
 ```
