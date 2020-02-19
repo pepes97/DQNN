@@ -6,6 +6,7 @@
 
 def get_params(argv):
     print("SET: {}".format(argv))
+    argv = str(argv)
     # ########### default parameters ##############
     params = dict(
         quick_test=False,    # To do quick test. Trains/test on small subset of dataset
@@ -46,7 +47,7 @@ def get_params(argv):
     elif argv == '999':
         print("QUICK TEST MODE\n")
         params['quick_test'] = True
-        params['nb_epochs'] = 2
+        params['nb_epochs'] = 5
 
     # Different datasets
     elif argv == '2':  # anechoic simulated Ambisonic data set
@@ -86,12 +87,12 @@ def get_params(argv):
     elif argv == '10':
         params['overlap'] = 1
         params['split'] = 0
-    
+
     elif argv == '20':
         params['overlap'] = 2
         params['split'] = 0
-    
 
+    
     else:
         print('ERROR: unknown argument {}'.format(argv))
         exit()
