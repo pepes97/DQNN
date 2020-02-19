@@ -329,6 +329,7 @@ def main(args):
             epoch_manager.reset_patience_cnt()
         
         if patience_cnt > params['patience']:
+            print(f"\n----  PATIENCE TRIGGERED AFTER {epoch_cnt} EPOCHS  ----\n")
             break
 
         summary = session.run(merged, feed_dict={time_hold: time.time() - start,
@@ -359,6 +360,8 @@ def main(args):
         )
         epoch_manager.increase_epoch()
     
+    print("\n----  FINISHED TRAINING  ----\n")
+
     print('best_conf_mat : {}'.format(best_conf_mat))
     print('best_conf_mat_diag : {}'.format(np.diag(best_conf_mat)))
     print('saved model for the best_epoch: {} with best_metric: {},  '.format(best_epoch, best_metric))
