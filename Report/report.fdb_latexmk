@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1582659091 "c:/Users/sveva/Desktop/DQNN/Report/report.tex" "c:/Users/sveva/Desktop/DQNN/Report/report.pdf" "report" 1582659196
-  "c:/Users/sveva/Desktop/DQNN/Report/report.aux" 1582659092 1444 54ecc038b26cec229a20349d3f94401e ""
-  "c:/Users/sveva/Desktop/DQNN/Report/report.tex" 1582659193 9151 8d437dc402850fcbb2d0e8bc08442271 ""
+["pdflatex"] 1582662088 "c:/Users/sveva/Desktop/DQNN/Report/report.tex" "c:/Users/sveva/Desktop/DQNN/Report/report.pdf" "report" 1582662090
+  "c:/Users/sveva/Desktop/DQNN/Report/report.aux" 1582662089 1444 54ecc038b26cec229a20349d3f94401e ""
+  "c:/Users/sveva/Desktop/DQNN/Report/report.tex" 1582662085 9286 57441415512a28e5ec5880e21136a5be ""
   "c:/texlive/2018/texmf-dist/fonts/map/fontname/texfonts.map" 1551375520 3332 103109f5612ad95229751940c61aada0 ""
   "c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1551373775 1004 54797486969f23fa377b128694d548df ""
   "c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1551373775 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -86,13 +86,13 @@
   "c:/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1551379612 3265573 655ac40406f2c37c0d9078d533adef20 ""
   "c:/texlive/2018/texmf-var/web2c/pdftex/pdflatex.fmt" 1551379818 4223237 5b1f0081c615bcb5232f09ff6462261a ""
   "c:/texlive/2018/texmf.cnf" 1551379564 673 4ae7b2f49cee444c5343a45b5d0f169c ""
-  "report.aux" 1582659092 1444 54ecc038b26cec229a20349d3f94401e ""
-  "report.out" 1582659092 326 cb17950be22b7b769c57509009c6ba93 ""
-  "report.tex" 1582659193 9151 8d437dc402850fcbb2d0e8bc08442271 ""
+  "report.aux" 1582662089 1444 54ecc038b26cec229a20349d3f94401e ""
+  "report.out" 1582662089 326 cb17950be22b7b769c57509009c6ba93 ""
+  "report.tex" 1582662085 9286 57441415512a28e5ec5880e21136a5be ""
   (generated)
-  "c:/Users/sveva/Desktop/DQNN/Report/report.log"
-  "c:/Users/sveva/Desktop/DQNN/Report/report.pdf"
-  "report.out"
-  "report.pdf"
   "report.log"
+  "c:/Users/sveva/Desktop/DQNN/Report/report.log"
   "report.aux"
+  "report.pdf"
+  "report.out"
+  "c:/Users/sveva/Desktop/DQNN/Report/report.pdf"

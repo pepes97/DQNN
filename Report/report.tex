@@ -64,8 +64,8 @@
                \hspace{1.2cm} + (W_wx_z + W_xx_y - W_yx_x - W_zx_w )\hat{i}
         \end{matrix}
     \end{equation*}
-    where x is the vector of the quaternions taken as input and W a generic quaternion filter matrix.
-    \\ Hamilton product allows quaternion neural networks tocapture internal latent relations within the features of a quaternion.
+    Where x is the vector of the quaternions taken as input and W a generic quaternion filter matrix.
+    \\ Hamilton product allows quaternion neural networks to capture internal latent relations within the features of a quaternion.
     \\ After it is applied the Batch Normalization, a technique for improving the speed, performance, and stability of artificial 
     neural networks. It is used to normalize the input layer by adjusting and scaling the activations.
     Also, batch normalization allows each layer of a network to learn by itself a little bit more independently of other layers.
@@ -86,6 +86,7 @@
     \\ Max-pooling is applied along the frequency axis for 
     dimensionality reduction while preserving the sequence length T, we obtain in the end that the output of the 3 QCN has 
     dimension T x 8P and fed to bidirectional QRNN layers to better catch the time progress of the input signals.  
+    \\ The network also uses the Dropout technique, which consists in randomly removing network units with some probability $\beta$.
     \\ \\ QRNN are recurring neural networks based on quaternions.
     The peculiarity of recurrent neural networks is that they differ from feedforward nets because they include a feedback loop,
     whereby output from step n-1 is fed back to the net to affect the outcome of step n, and so forth for each subsequent step.
