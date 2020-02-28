@@ -35,7 +35,7 @@ class FeatureClass:
             #self._base_folder = os.path.join('/proj/asignal/TUT_SELD/', 'tut_seld_data/')
         
         # Added by Marco Pennese
-        self._base_folder = '../Dataset/TAU Dataset'
+        self._base_folder = '../Dataset/TAU Dataset Seld'
         
         # Input directories
         self._aud_dir = os.path.join(self._base_folder, 'wav_ov{}_split{}_{}db{}'.format(ov, split, db, wav_extra_name))
