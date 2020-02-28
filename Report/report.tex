@@ -27,13 +27,13 @@
     %     in space by using quaternion-valued data processing.
     % \end{abstract}
     \section{Introduction}
-    Sound source localization is a fundamental task, expecially in revembrant and multiple sources envoirments.\\
+    Sound source localization is a fundamental task, expecially in revembrant and multiple sources envoirments; it includes recognizing the temporal onset and offset of sound events when active, classifying the sound events into known set of classes, and further localizing the events in space when active using their direction of arrival (DOA).\\
     In this project, we work with 3D audio sounds captured by first-order Ambisonic microphone and these sounds are then represented 
     by spherical harmonics decomposition in the quaternion domain.
     \\ The aim of the project is to detect the temporal activities of a known set of sound event classes and to further locate them in 
-    the space using quaternion-valued data processing, in particular we focus on the sound event localization and detection. 
-    \\ In order to do this, we use a given Quaternion Recurrent Convolutional Neural Network (QRCNN) 
-    for the joint 3D sound event localization and detection (SELD) task.
+    the space using quaternion-valued data processing, in particular we focus on the sound event localization and detection (SELD). 
+    \\ In order to do this, we use a given Quaternion Convolutional Neural Network with the addition of some recurrent layers (QCNN) 
+    for the joint 3D sound event localization and detection task.
     % Talk about SELD, which is made up of DOA and SED. Say what I am in a general way, don't go into too much detail, don't go too 
     % far [my advice]. (they are well written in the last paper sent by our friend cominiello).
     % To say that with quaternions the performances are better than without.
@@ -245,7 +245,15 @@
     % \\I would put image of the network.
     % \\We can also specify the dimensions of the fetures after the QCNN, the QRNN and the FC.
     \section{Dataset}
-    The dataset, what it is made of, and how it was divided by us. How many files each subfolder is made up of.
+    We evaluate the proposed method involving the QCNN on a datatset, TAU Spatial Sound Events 2019 - Ambisonic, providing four-channel First-Order Ambisonic (FOA) recordings.\\
+    The recordings on the dataset consist of stationary point sources from multiple sound classes each associated with a temporal onset and offset time, and DOA coordinate represented using azimuth and elevation angle.\\
+    The dataset consists of a development and evaluation set.  The development set consists of 400, one minute long recordings sampled at 48000 Hz, divided into four cross-validation splits of 100 recordings each. The evaluation set consists of 100 one-minute long recordings.\\
+    These recordings were synthesized using spatial room impulse response (IRs) collected from five indoor locations, at 504 unique combinations of azimuth-elevation-distance. \\
+    Additionally, half the number of record- ings have up to two temporally overlapping sound events, and the remaining have no overlapping.\\
+    Finally, to create a realistic sound scene recording, natural ambient noise collected in the IR recording locations was added to the synthesized recordings such that the average SNR of the sound events was 30 dB.\\
+    The only explicit difference between each of the development dataset splits and eval- uation dataset is the isolated sound event examples employed.\\
+    The dataset consists of eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, keysDrop,  speech, keyboard, pageturn, cough, doorslam and laughter.\\
+    The dataset contains 250 audio files, randomly divided into five splits: the first four for training the network, while the remaining one is used for testing (20\%).
     \section{Metrics}
     The metrics used, therefore the average, SELD SCORE, the confidence interval and I do not know whether to consider the F1 score as well. Obviously with formulas 
     \section{Experiments}
