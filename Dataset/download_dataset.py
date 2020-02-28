@@ -27,11 +27,18 @@ for f in url:
     print(f"Already downloaded: {name}")
 
 import subprocess
-commands = [['zip', '-s', '0', 'foa_dev.zip', '--out', 'unsplit_foa_dev.zip'],
-            ['unzip', 'unsplit_foa_dev.zip'],
+
+command = ['zip', '-s', '0', 'foa_dev.zip', '--out', 'unsplit_foa_dev.zip']
+if "unsplit_foa_dev.zip" not in os.listdir("."):
+  correct = subprocess.run(command,
+        # Probably don't forget these, too
+        check=True)
+
+commands = [['unzip', 'unsplit_foa_dev.zip'],
             ['unzip', 'metadata_dev.zip'],
             ['unzip', 'foa_eval.zip'],
             ['unzip', 'metadata_eval.zip']]
+
 
 for command in commands:
     correct = subprocess.run(command,
