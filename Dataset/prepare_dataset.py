@@ -1,5 +1,5 @@
 import os
-
+import shutil
 os.chdir("foa_dev")
 file_list = os.listdir()
 file_list.sort()
@@ -152,6 +152,7 @@ for folder in folders:
 
 os.chdir("..")
 os.rename("foa_dev", "TAU Dataset")
+shutil.copytree("TAU Dataset", "TAU Dataset Seld")
 os.rmdir("metadata_dev")
 import shutil
 shutil.rmtree('metadata_eval')

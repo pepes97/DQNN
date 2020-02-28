@@ -141,6 +141,7 @@ for folder in folders:
 
 os.chdir("..")
 os.rename("foa_dev", "TAU Dataset")
+shutil.copytree("TAU Dataset", "TAU Dataset Seld")
 os.rmdir("metadata_dev")
 import shutil
 shutil.rmtree('metadata_eval')
