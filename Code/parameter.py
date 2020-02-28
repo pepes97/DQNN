@@ -49,6 +49,19 @@ def get_params(argv):
         params['quick_test'] = True
         params['nb_epochs'] = 5
 
+    elif argv == '998':
+        params['quick_test'] = True
+        params['nb_epochs'] = 5
+        # DNN MODEL PARAMETERS
+        params['sequence_length']=128      # Feature sequence length
+        params['batch_size']=16              # Batch size
+        params['dropout_rate']=0             # Dropout rate, constant for all layers
+        params['nb_cnn2d_filt']=64           # Number of CNN nodes, constant for each layer
+        params['pool_size']=[8, 8, 4]        # CNN pooling, length of list = number of CNN layers, list value = pooling per layer
+        params['rnn_size']=[128, 128]        # RNN contents, length of list = number of layers, list value = number of nodes
+        params['fnn_size']=[128]             # FNN contents, length of list = number of layers, list value = number of nodes
+        params['loss_weights']=[1., 50.]     # [sed, doa] weight for scaling the DNN outputs
+
     # Different datasets
     elif argv == '2':  # anechoic simulated Ambisonic data set
         params['dataset'] = 'ansim'
@@ -92,7 +105,37 @@ def get_params(argv):
         params['overlap'] = 2
         params['split'] = 0
 
-    
+    ### 11 and 21 have to be used with seld_cnn.py script
+    ##  not with normal seld.py
+    elif argv == '11':
+        params['overlap'] = 1
+        params['split'] = 0
+
+                # DNN MODEL PARAMETERS
+        params['sequence_length']=128      # Feature sequence length
+        params['batch_size']=16              # Batch size
+        params['dropout_rate']=0             # Dropout rate, constant for all layers
+        params['nb_cnn2d_filt']=64           # Number of CNN nodes, constant for each layer
+        params['pool_size']=[8, 8, 4]        # CNN pooling, length of list = number of CNN layers, list value = pooling per layer
+        params['rnn_size']=[128, 128]        # RNN contents, length of list = number of layers, list value = number of nodes
+        params['fnn_size']=[128]             # FNN contents, length of list = number of layers, list value = number of nodes
+        params['loss_weights']=[1., 50.]     # [sed, doa] weight for scaling the DNN outputs
+
+    elif argv == '21':
+        params['overlap'] = 2
+        params['split'] = 0
+
+                # DNN MODEL PARAMETERS
+        params['sequence_length']=128      # Feature sequence length
+        params['batch_size']=16              # Batch size
+        params['dropout_rate']=0             # Dropout rate, constant for all layers
+        params['nb_cnn2d_filt']=64           # Number of CNN nodes, constant for each layer
+        params['pool_size']=[8, 8, 4]        # CNN pooling, length of list = number of CNN layers, list value = pooling per layer
+        params['rnn_size']=[128, 128]        # RNN contents, length of list = number of layers, list value = number of nodes
+        params['fnn_size']=[128]             # FNN contents, length of list = number of layers, list value = number of nodes
+        params['loss_weights']=[1., 50.]     # [sed, doa] weight for scaling the DNN outputs
+
+
     else:
         print('ERROR: unknown argument {}'.format(argv))
         exit()
