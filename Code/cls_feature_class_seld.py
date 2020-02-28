@@ -20,20 +20,6 @@ class FeatureClass:
         :param dataset: string, dataset name, supported: foa - ambisonic or mic- microphone format
         :param is_eval: if True, does not load dataset labels.
         """
-
-        if dataset == 'ansim':
-            self._base_folder = 'ansim'
-        elif dataset == 'resim':
-            #self._base_folder = os.path.join('/proj/asignal/TUT_SELD/', 'doa_data_echoic/')
-            self._base_folder = 'resim'
-        elif dataset == 'cansim':
-            self._base_folder = os.path.join('/proj/asignal/TUT_SELD/', 'doa_circdata/')
-        elif dataset == 'cresim':
-            self._base_folder = os.path.join('/proj/asignal/TUT_SELD/', 'doa_circdata_echoic/')
-        elif dataset == 'real':
-            self._base_folder = 'real'
-            #self._base_folder = os.path.join('/proj/asignal/TUT_SELD/', 'tut_seld_data/')
-        
         # Added by Marco Pennese
         self._base_folder = '../Dataset/TAU Dataset Seld'
         
