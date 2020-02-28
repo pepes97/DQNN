@@ -33,6 +33,8 @@ if "unsplit_foa_dev.zip" not in os.listdir("."):
   correct = subprocess.run(command,
         # Probably don't forget these, too
         check=True)
+else:
+  print("Zip files already merged")
 
 commands = [['unzip', 'unsplit_foa_dev.zip'],
             ['unzip', 'metadata_dev.zip'],
