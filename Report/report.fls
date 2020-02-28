@@ -151,12 +151,14 @@ INPUT c:/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT c:/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+INPUT c:/texlive/2018/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT c:/Users/sveva/Desktop/DQNN/Report/report.aux
 INPUT c:/Users/sveva/Desktop/DQNN/Report/report.out
 INPUT c:/Users/sveva/Desktop/DQNN/Report/report.out
 INPUT c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 INPUT c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+INPUT c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb
 INPUT c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
 INPUT c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb

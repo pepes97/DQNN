@@ -32,7 +32,7 @@
     by spherical harmonics decomposition in the quaternion domain.
     \\ The aim of the project is to detect the temporal activities of a known set of sound event classes and to further locate them in 
     the space using quaternion-valued data processing, in particular we focus on the sound event localization and detection. 
-    \\ In order to do this, we use a given Quaternion Convolutional Neural Network with the addition of some recurrent layers (QCNN) 
+    \\ In order to do this, we use a given Quaternion Recurrent Convolutional Neural Network (QRCNN) 
     for the joint 3D sound event localization and detection (SELD) task.
     % Talk about SELD, which is made up of DOA and SED. Say what I am in a general way, don't go into too much detail, don't go too 
     % far [my advice]. (they are well written in the last paper sent by our friend cominiello).
@@ -106,7 +106,48 @@
         I_r [k,n]= \Im \{ p^*[k,n]v[k,n]\} 
     \end{equation*}
     which corresponds to the dissipative energy transport and whose mean value is zero.
-    (DEVO FINIRE)
+    \\ Since the intensity vectors contain the information of theacoustical energy direction of a sound wave, the acoustic intensity
+    vector can be directly used for DOA estimation, used in localization.
+    \\ In theory, the sound DOA can be estimated as the opposite direction of the active intensity vector. In practice, however, 
+    the estimates obtained across all time-frequency bins are inconsistent in reverberant environments.
+    \\ Active intensity refers directly to DOA, while reactive intensity indicates whether a given frequency-time bin is dominated
+    by sound directed by a single source, opposed to overlapping sources or reverberation. 
+    \\ In this way, the active and reactive intensity vectors are both extracted from the spectrogram from each audio channel and 
+    are used as separate functions.
+    \\ We use both the active and reactive intensity vectors across all frequency bins in the STFT domain as input features,
+    in particular,  in order to represent the active and reactive intensity vectors we encapsulate the information in two quaternions. 
+    \\  Since we have three components for each intensity vector, we also consider one more channel related to the magnitude of the
+    omnidirectional microphone signal in order to improve the performances of the localization task.
+    \\ Input features can be expressed by the two quaternions $q_a[k,n]$ and $q_r[k,n]$:
+    \begin{equation*}
+            \begin{matrix}
+                q_a[k,n]=\Re\{x_W^*[k,n]x_W[k,n]\} \\
+                \hspace{1cm} + \Re\{x_W^*[k,n]x_X[k,n]\}\hat{i} \\
+                \hspace{1cm} + \Re\{x_W^*[k,n]x_Y[k,n]\}\hat{j} \\
+                \hspace{1cm} + \Re\{x_W^*[k,n]x_Z[k,n]\}\hat{k} \\
+            \end{matrix}
+    \end{equation*}
+    \begin{equation*}
+        \begin{matrix}
+            q_r[k,n]=\Im\{x_W^*[k,n]x_W[k,n]\} \\
+            \hspace{1cm} + \Im\{x_W^*[k,n]x_X[k,n]\}\hat{i} \\
+            \hspace{1cm} + \Im\{x_W^*[k,n]x_Y[k,n]\}\hat{j} \\
+            \hspace{1cm} + \Im\{x_W^*[k,n]x_Z[k,n]\}\hat{k} \\
+        \end{matrix}
+    \end{equation*}
+    We normalize each time-frequency bin by its total energy $\epsilon_T=\epsilon_P+\epsilon_K$, where $\epsilon_P=|x_W[k, n]|^2$ 
+    is the potential energy density related to the sound pressure and $\epsilon_K=\frac{1}{3}(|x_X[k, n]|^2+|x_Y[k, n]|^2+|x_Z[k, n]|^2)$ 
+    is the kinetic energy density related to the particle velocity.
+    \\ Now can we express the normalize quaternion inputs as:
+    \begin{equation*}
+        \overline{q}_a [k,n] = \frac{q_a[k,n]}{\epsilon_T} 
+    \end{equation*}
+    \begin{equation*}
+        \overline{q}_r [k,n] = \frac{q_r[k,n]}{\epsilon_T} 
+    \end{equation*}
+    The proposed model receives the quaternion ambisonic recording, from which it extracts the spectrogram in terms of magnitude and phase
+    components using a Hamming window of lengthvM, an overlap of 50\%, and considering only the $\frac{M}{2}$ positive frequencies without the 
+    zeroth bin. herefore, from the two quaternion inputs, we obtain afeature sequence of T frames, with an overall dimension of $Tx\frac{M}{2}x8$.
     % What are quaternions, and their connection with 3D audio recorded with Ambisonic.
     % Enter the mathematical formula on the composition (that of the real part + imaginary part).
     % A minimum of considerations on active and reactive intensity, in particular
@@ -161,6 +202,32 @@
     a hyperbolic tangent (tanh).
     \\ \\ The output of the recurrent layer is shared between two fully-connected layer branches each producing the SED as 
     multi-class multilabel classification and DOA as multi-output regression; together producing the SELD output.
+    \subsection{Weight Initialization}
+    The appropriate and correct initialization of the network parameters in the quaternion domain must take into account the
+    interactions between quaternion-valued components,  thus a simple random and component-wise initialization may result in an 
+    unsuitable choice. 
+    \\ A possible solution maybe derived by considering a normalized purely quaternion  $u^\triangleleft$ generated for each weight w 
+    by following a uniform distribution in $[0,1]$. 
+    \\ Each weight can be written in a polar form as:
+    \begin{equation*}
+        w= |w|e^{u^\triangleleft \theta} = |w| (\cos{\theta} + u^\triangleleft \sin{\theta}) 
+    \end{equation*}
+    from which it is possible to derive the quaternion-valued components of w:
+    \begin{equation*}
+        \begin{cases}
+            w_W = \phi \cos{(\theta)} \\
+            w_X = \phi u_X^\triangleleft\sin{(\theta)} \\
+            w_Y = \phi u_Y^\triangleleft\sin{(\theta)} \\
+            w_Z = \phi u_Z^\triangleleft\sin{(\theta)}
+        \end{cases}
+    \end{equation*}
+    where $\theta$ is randomly generated in the range $[-\pi, \pi]$ and $\phi$ is a randomly enerated variable related to the variance
+    of the quaternion weight, defined as var(W) = $E\{|W|\} - (E\{|W|\})^2 $. where  the second term is null due to the symmetric distribution
+    of the weight around 0. Since W follows a Chi distribution with four degrees of freedom, the variance can be expressed as:
+    \begin{equation*}
+        var(W)=E\{|W|^2\}= \int_0^\infty w^2f(w) dw = 4 \sigma^2
+    \end{equation*}
+    being $\sigma$ the standard deviation. The variable $\phi$ can be randomly generated in the range $[-\sigma, \sigma]$.
     % Explain the architecture, then start with the 3 QCNN, what is a convolutional network with quaternions 
     % (weights, Hamilton product etc.), which does BatchNormalization (to be specified that this is not based on quaternions), 
     % the activation functions, what is MaxPooling (just explain what it does) and conclude with the Dropout (technique that serves 
