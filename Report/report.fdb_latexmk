@@ -1,8 +1,8 @@
 # Fdb version 3
-["pdflatex"] 1582892227 "c:/Users/sveva/Desktop/DQNN/Report/report.tex" "c:/Users/sveva/Desktop/DQNN/Report/report.pdf" "report" 1582892229
+["pdflatex"] 1582892382 "c:/Users/sveva/Desktop/DQNN/Report/report.tex" "c:/Users/sveva/Desktop/DQNN/Report/report.pdf" "report" 1582892404
   "QRCNN.jpg" 1582892005 126811 4b84ea855100abf65bbd4a1f4c5826d8 ""
-  "c:/Users/sveva/Desktop/DQNN/Report/report.aux" 1582892229 1746 9d162e0086d55dc56464b34253b967d1 ""
-  "c:/Users/sveva/Desktop/DQNN/Report/report.tex" 1582892223 18484 891c6d9960433c9c77a957eba4f12872 ""
+  "c:/Users/sveva/Desktop/DQNN/Report/report.aux" 1582892383 1746 28afee3c14eddc186ca19dc463b1a243 ""
+  "c:/Users/sveva/Desktop/DQNN/Report/report.tex" 1582892401 18489 86fd9c307230f1e3336050104e29e34e ""
   "c:/texlive/2018/texmf-dist/fonts/map/fontname/texfonts.map" 1551375520 3332 103109f5612ad95229751940c61aada0 ""
   "c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1551373775 1004 54797486969f23fa377b128694d548df ""
   "c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1551373775 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -91,13 +91,13 @@
   "c:/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1551379612 3265573 655ac40406f2c37c0d9078d533adef20 ""
   "c:/texlive/2018/texmf-var/web2c/pdftex/pdflatex.fmt" 1551379818 4223237 5b1f0081c615bcb5232f09ff6462261a ""
   "c:/texlive/2018/texmf.cnf" 1551379564 673 4ae7b2f49cee444c5343a45b5d0f169c ""
-  "report.aux" 1582892229 1746 9d162e0086d55dc56464b34253b967d1 ""
-  "report.out" 1582892229 396 193cd7dff74ed7d166c01c9e6a4b5c54 ""
-  "report.tex" 1582892223 18484 891c6d9960433c9c77a957eba4f12872 ""
+  "report.aux" 1582892383 1746 28afee3c14eddc186ca19dc463b1a243 ""
+  "report.out" 1582892383 396 193cd7dff74ed7d166c01c9e6a4b5c54 ""
+  "report.tex" 1582892401 18489 86fd9c307230f1e3336050104e29e34e ""
   (generated)
+  "report.aux"
+  "report.log"
   "report.pdf"
   "report.out"
-  "c:/Users/sveva/Desktop/DQNN/Report/report.log"
-  "report.aux"
   "c:/Users/sveva/Desktop/DQNN/Report/report.pdf"
-  "report.log"
+  "c:/Users/sveva/Desktop/DQNN/Report/report.log"
