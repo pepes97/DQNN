@@ -255,7 +255,13 @@
     The dataset consists of eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, keysDrop,  speech, keyboard, pageturn, cough, doorslam and laughter.\\
     The dataset contains 250 audio files, randomly divided into five splits: the first four for training the network, while the remaining one is used for testing (20\%).
     \section{Metrics}
-    The metrics used, therefore the average, SELD SCORE, the confidence interval and I do not know whether to consider the F1 score as well. Obviously with formulas 
+    The SELD task can use individual SED and localization (DOA) metrics. \\
+    For the SED task, we use the polyphonic SED metrics that are the F-score (ideally F = 1), based on the number of true and false positives, and the error rate (ER) (ideally ER = 0), based on the total number of active sound event classes in the ground truth.\\
+    A joint SED score can be considered as S$_{SED}$ = $\dfrac{(ER+(1-F))}{2}$.\\
+    On the other hand, in order to measure the performance of the localization task, a DOA estimation error DOA$_{err}$ can be used as evaluation metric, based on estimated and ground truth DOAs.\\ Moreover, a frame recall metric K (ideally K = 1) can be used based on the percentage of true positives. \\
+    A joint DOA score can be defined as S$_{DOA}$ = $\dfrac{(DOA_{err}/180 + (1 - K))}{2}$.\\
+    The lower the SDOA score, the better the results in terms of 3D localization.
+    Finally, an overall SELD score can be defined based on the previous metrics as S$_{SELD}$ = $\dfrac{(S_{SED} + S_{DOA})}{2}$.\\
     \section{Experiments}
     Our experiments, then the changes we made, the results that come to us, the various graphs.
     Let's see what comes out of it, and in case I would make comparisons with the results that have been obtained from the various papers that have provided us.
