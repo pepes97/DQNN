@@ -259,54 +259,103 @@
     \paragraph{}
     The main division is about the number of overlaps, we have samples with two and one overlap. For each one of these subsets we have two directories: one with the file audio (in wav format) and the other for the labels (in csv format). The dataset results to be divided in 4 directories. 
     \section{Metrics}
-    \paragraph{}
     The SELD task can use individual SED and localization (DOA) metrics.
-    \paragraph{}
-    For the SED task, we use the polyphonic SED metrics that are the F-score (ideally F = 1), based on the number of true and false positives, and the error rate (ER) (ideally ER = 0), based on the total number of active sound event classes in the ground truth.\\
+    \\ \\ For the SED task, we use the polyphonic SED metrics that are the F-score (ideally F = 1), based on the number of true and false positives, and the error rate (ER) (ideally ER = 0), based on the total number of active sound event classes in the ground truth.\\
     A joint SED score can be considered as $S_{SED} = \dfrac{(ER+(1-F))}{2}$.
-    \paragraph{}
-    On the other hand, in order to measure the performance of the localization task, a DOA estimation error DOA$_{err}$ can be used as evaluation metric, based on estimated and ground truth DOAs.\\ Moreover, a frame recall metric K (ideally K = 1) can be used based on the percentage of true positives. \\
+    \\ \\ On the other hand, in order to measure the performance of the localization task, a DOA estimation error DOA$_{err}$ can be used as evaluation metric, based on estimated and ground truth DOAs.\\ Moreover, a frame recall metric K (ideally K = 1) can be used based on the percentage of true positives. \\
     A joint DOA score can be defined as $S_{DOA} = \dfrac{(DOA_{err}/180 + (1 - K))}{2}$.\\
     The lower the $S_{DOA}$ score, the better the results in terms of 3D localization.
     Finally, an overall SELD score can be defined based on the previous metrics as $S_{SELD} = \dfrac{(S_{SED} + S_{DOA})}{2}$.\\
     \section{Experimentation}
-    \paragraph{}
-    Our experiments, then the changes we made, the results that come to us, the various graphs.
-    Let's see what comes out of it, and in case I would make comparisons with the results that have been obtained from the various papers that have provided us.
-    \paragraph{}
-    We did experiments using two different approaches.
+    We did experiments using two different approaches and for each model that we create after training, we computed confidence interval.
     \subsection*{First Experiment}
     In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, in particular we changed the number of filters in the Quaternion convolutional layers, in order to discover what is the behavior of the network and its results with respect to the different parameters.
-    \paragraph{}
-    We did our experiments tring the values 16 and 32 for the hyperparameter of the number of filters (the hyperparameter \textbf{P}) in the QCNN layers.
+    \\ \\ We did our experiments tring the values 16 and 32 for the hyperparameter of the number of filters (the hyperparameter \textbf{P}) in the QCNN layers.
     This led to a huge difference in the number of parameters of the models. While in the model with 16 filters there are 270.657 trainable parameters in the model with 32 there are 425.985 parameters.
     We leave unchanged all the other parameters with these values: window length M=512, sequence length T=512 of frames, batch size 10, Q=128 nodes for the recurrent network and 32 nodes for fully connected layers.
-    \paragraph{}
-    We trained this two models on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
+    \\  \\ We trained this two models on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
     Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one overlap. In fact, having two different sound sources in the same time instant makes the problem of detecting and localizing the sources a lot more complex to solve for the network.
-	\paragraph{}
-	We trained the models for $\sim$150 epochs.
-    \paragraph{}
-    We discovered that the network with 32 number of filters in the QCNN layers performs slightly better than the model with only 16 filters.
+	\\ \\We trained the models for $\sim$150 epochs.
+    \\ We discovered that the network with 32 number of filters in the QCNN layers performs slightly better than the model with only 16 filters.
     \subsection*{Second Experiment}
-
-    \paragraph{}
     In our second experiment, we compared the traditional approach used in this kind of problems (the Seld network based on normal convolutional layers) with the Quaternion based neural network.\\
     We trained both networks with the same data and studied the results.
-    \paragraph{}
-    We couldn't extract the feature in the same way for both the models because they expect different inputs. While the traditional model expects as input some Fourier transform values, our network expects it in a Quaternion form. For this reason, we had to run two different scripts for extracting the features in the two different ways. 
-\paragraph{}
-For training our QCNN, we used the winning configuration of our first experiment (with 32 filters in the Quaternion Convolutional layers).
-In the Seld Network we used the default parameters used by Sharath Adavanne, Archontis Politis, and Tuomas Virtanen in their work with the Seld-net. 
-\paragraph{}
-We trained the models for $\sim$150 epochs.
-
-
+    \\ \\ We couldn't extract the feature in the same way for both the models because they expect different inputs. While the traditional model expects as input some Fourier transform values, our network expects it in a Quaternion form. For this reason, we had to run two different scripts for extracting the features in the two different ways. 
+	\\ \\ For training our QCNN, we used the winning configuration of our first experiment (with 32 filters in the Quaternion Convolutional layers).
+	\\In the Seld Network we used the default parameters used by Sharath Adavanne, Archontis Politis, and Tuomas Virtanen in their work with the Seld-net. 
+	\\ \\ We trained the models for $\sim$150 epochs.
     \section{Results}
-    tabelle e intervalli di confidenza.
-    \begin{tabular}{ccc}
-    asdf & asdfg &asdf\\
+    1) GRAFICO 32 OV1 E OV2 (SELD SCORE, SED SCORE E DOA SCORE)
+    \paragraph{}
+    \begin{tabular}{c|c}
+    	& QCRNN \\
+     	\hline
+    	O1 \begin{tabular} {c}
+    		$Error\hspace{0.2cm}rate$\\
+    		$F1-score$ \\
+    		$S_{SED}$ \\
+    		$S_{DOA}$ \\
+    		$S_{SELD}$
+    	\end{tabular}& \begin{tabular} {c}
+    	1 \\
+    	2 \\
+    	3 \\
+    	4 \\
+    	5 
+    \end{tabular} \\
+	\hline
+	O2 \begin{tabular} {c}
+		$Error\hspace{0.2cm}rate$\\
+		$F1-score$ \\
+		$S_{SED}$ \\
+		$S_{DOA}$ \\
+		$S_{SELD}$
+	\end{tabular}& \begin{tabular} {c}
+		1 \\
+		2 \\
+		3 \\
+		4 \\
+		5
+	\end{tabular}
     \end{tabular}
+	\paragraph{}
+	2) GRAFICO TUTTI CON OV1 (SELD SCORE, SED SCORE E DOA SCORE)
+	\\ 3) GRAFICO TUTTI CON OV2 (SELD SCORE, SED SCORE E DOA SCORE)
+    \paragraph{}
+    \begin{tabular}{c|c|c|c}
+
+     & QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
+    \hline
+    O1 \begin{tabular} {c}
+    	$S_{SED}$ \\
+    	$S_{DOA}$ \\
+    	$S_{SELD}$
+    \end{tabular}& 
+	\begin{tabular} {c}
+    1 \\
+    2 \\
+    3
+	\end{tabular}& \begin{tabular} {c}
+	1 \\
+	2 \\
+	3
+\end{tabular}&
+\begin{tabular} {c}
+1 \\
+2 \\
+3
+\end{tabular} \\
+    \hline
+    O2 \begin{tabular} {c}
+    	$S_{SED}$ \\
+    	$S_{DOA}$ \\
+    	$S_{SELD}$
+    \end{tabular}& & & \\
+    
+    \end{tabular}
+	\\ \\RISULTATI INTERVALLO DI CONFIDENZA (una riga)
     \section{Conclusion}
-    The conclusions regarding the project carried out and you have had results based on the metrics that we used.
+    Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
+    \\ Confronto tra i risultati di 16 con quelli da 32, in particolare tra i due overlap (cioè i ov1 separati da ov2). Inoltre, evidenziare che con 32 si ottengono risultati migliori. Spiegazione del perchè 32 è meglio.
+    \\ Analisi complessiva delle diffenze dell'andamento della rete dei quaternioni con quella normale (CNN). In particolare, sottolineando che quella dei quaternioni risulta essere migliore e perchè.
 \end{document}
