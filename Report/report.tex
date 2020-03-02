@@ -255,9 +255,9 @@
     The dataset consists of eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, keysDrop,  speech, keyboard, pageturn, cough, doorslam and laughter.\\
     The dataset contains 250 audio files, randomly divided into five splits in a way that in each split there is an equal number of examples for each class: we used the first four for training the network, while the remaining one is used for testing (20\%).
     \paragraph{}
-    We wrote a Python script in order to divide the dataset in the right way. The script automatically
+    We wrote a Python script in order to divide the dataset in the right way. The script automatically divides the samples and creates the directories that the the program expects to receive.
     \paragraph{}
-    The dataset results to be divided in 4 directories: the main division is about the number of overlaps,  
+    The main division is about the number of overlaps, we have samples with two and one overlap. For each one of these subsets we have two directories: one with the file audio (in wav format) and the other for the labels (in csv format). The dataset results to be divided in 4 directories. 
     \section{Metrics}
     \paragraph{}
     The SELD task can use individual SED and localization (DOA) metrics.
@@ -288,8 +288,6 @@
 	We trained the models for $\sim$150 epochs.
     \paragraph{}
     We discovered that the network with 32 number of filters in the QCNN layers performs slightly better than the model with only 16 filters.
-    \paragraph{}
-    \textbf{GRAFICI SELD SCORE}
     \subsection*{Second Experiment}
 
     \paragraph{}
@@ -299,10 +297,16 @@
     We couldn't extract the feature in the same way for both the models because they expect different inputs. While the traditional model expects as input some Fourier transform values, our network expects it in a Quaternion form. For this reason, we had to run two different scripts for extracting the features in the two different ways. 
 \paragraph{}
 For training our QCNN, we used the winning configuration of our first experiment (with 32 filters in the Quaternion Convolutional layers).
-In the Seld Network we used the default parameters of 
+In the Seld Network we used the default parameters used by Sharath Adavanne, Archontis Politis, and Tuomas Virtanen in their work with the Seld-net. 
+\paragraph{}
+We trained the models for $\sim$150 epochs.
+
 
     \section{Results}
     tabelle e intervalli di confidenza.
+    \begin{tabular}{ccc}
+    asdf & asdfg &asdf\\
+    \end{tabular}
     \section{Conclusion}
     The conclusions regarding the project carried out and you have had results based on the metrics that we used.
 \end{document}
