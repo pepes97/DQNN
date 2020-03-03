@@ -8,6 +8,13 @@
 \usepackage{lipsum}
 \usepackage{multicol}
 \usepackage{sectsty}
+\usepackage{caption}
+
+\usepackage{placeins}
+
+
+\usepackage{subcaption}
+
 % \sectionfont{\centering}
 \usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
 \title{Deep Quaternion Neural Networks for 3D Sound \\ Source Localization and Detection
@@ -287,6 +294,8 @@
     \section{Results}
     1) GRAFICO 32 OV1 E OV2 (SELD SCORE, SED SCORE E DOA SCORE)
     \paragraph{}
+    \begin{center}
+    
     \begin{tabular}{c|c}
     	& QCRNN \\
      	\hline
@@ -297,12 +306,13 @@
     		$S_{DOA}$ \\
     		$S_{SELD}$
     	\end{tabular}& \begin{tabular} {c}
-    	1 \\
-    	2 \\
-    	3 \\
-    	4 \\
-    	5 
+    	0.6122 \\
+    	0.4972\\
+    	0.5575 \\
+    	0.3478 \\
+    	0.4527 
     \end{tabular} \\
+
 	\hline
 	O2 \begin{tabular} {c}
 		$Error\hspace{0.2cm}rate$\\
@@ -311,17 +321,37 @@
 		$S_{DOA}$ \\
 		$S_{SELD}$
 	\end{tabular}& \begin{tabular} {c}
-		1 \\
-		2 \\
-		3 \\
-		4 \\
-		5
+		0.7529 \\
+		0.3646 \\
+		0.6941 \\
+		0.459 \\
+		0.5766
 	\end{tabular}
     \end{tabular}
+        \end{center}
+
 	\paragraph{}
 	2) GRAFICO TUTTI CON OV1 (SELD SCORE, SED SCORE E DOA SCORE)
-	\\ 3) GRAFICO TUTTI CON OV2 (SELD SCORE, SED SCORE E DOA SCORE)
+	\\ 3) GRAFICO TUTTI CON OV2 (SELD SCORE, SED SCORE E DOA SCORE)\\
+\FloatBarrier
+
+\begin{figure}
+\centering
+
+\includegraphics[height=0.4\textwidth]{images/sed_score.png} \\
+\caption{$S_{SED}$ evolution computed on the test set during the training}
+\vspace{1em}
+\includegraphics[height=0.4\textwidth]{images/doa_score.png} \\
+\caption{$S_{DOA}$ evolution computed on the test set during the training}
+\vspace{1em}
+\includegraphics[height=0.4\textwidth]{images/seld_score.png}\\
+\caption{$S_{SELD}$ evolution computed on the test set during the training}
+\end{figure}
+\FloatBarrier
     \paragraph{}
+    \begin{center}
+    
+    
     \begin{tabular}{c|c|c|c}
 
      & QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
@@ -353,7 +383,50 @@
     \end{tabular}& & & \\
     
     \end{tabular}
-	\\ \\RISULTATI INTERVALLO DI CONFIDENZA (una riga)
+\end{center}	
+RISULTATI INTERVALLO DI CONFIDENZA (una riga)
+\FloatBarrier
+\begin{figure}
+\centering
+
+\begin{minipage}{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/doa_score.png}
+  \captionof{figure}{$S_{SED}$ Score on ov1}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/doa_score.png}
+  \captionof{figure}{$S_{SED}$ Score on ov2}
+  
+\end{minipage}\\
+\vspace{1em}
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/doa_score.png}
+  \captionof{figure}{$S_{DOA}$ Score on ov1}
+
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/doa_score.png}
+  \captionof{figure}{$S_{DOA}$ Score on ov2}
+\end{minipage}\\
+\vspace{1em}
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/doa_score.png}
+  \captionof{figure}{$S_{SELD}$ Score on ov1}
+
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/doa_score.png}
+  \captionof{figure}{$S_{SELD}$ Score on ov2}
+\end{minipage}
+
+\end{figure}
+\FloatBarrier
     \section{Conclusion}
     Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
     \\ Confronto tra i risultati di 16 con quelli da 32, in particolare tra i due overlap (cioè i ov1 separati da ov2). Inoltre, evidenziare che con 32 si ottengono risultati migliori. Spiegazione del perchè 32 è meglio.
