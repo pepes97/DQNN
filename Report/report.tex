@@ -9,10 +9,7 @@
 \usepackage{multicol}
 \usepackage{sectsty}
 \usepackage{caption}
-
 \usepackage{placeins}
-
-
 \usepackage{subcaption}
 
 % \sectionfont{\centering}
@@ -39,7 +36,7 @@
     by spherical harmonics decomposition in the quaternion domain.
     \\ The aim of the project is to detect the temporal activities of a known set of sound event classes and to further locate them in 
     the space using quaternion-valued data processing, in particular we focus on the sound event localization and detection (SELD). 
-    \\ In order to do this, we use a given Quaternion Convolutional Neural Network with the addition of some recurrent layers (QCNN) 
+    \\ In order to do this, we use a given Quaternion Convolutional Neural Network with the addition of some recurrent layers (QCRNN) 
     for the joint 3D sound event localization and detection task.
     % Talk about SELD, which is made up of DOA and SED. Say what I am in a general way, don't go into too much detail, don't go too 
     % far [my advice]. (they are well written in the last paper sent by our friend cominiello).
@@ -212,9 +209,9 @@
     \begin{figure}[htb!]
         \centering
         \fbox{\includegraphics[width=0.5\linewidth]{QRCNN}}
+        \caption{Quaternion Convolutional Neural Network}
         \label{fig:dqnn}
     \end{figure}
-    \\ \\ \\
     \subsection{Weight Initialization}
     The appropriate and correct initialization of the network parameters in the quaternion domain must take into account the
     interactions between quaternion-valued components,  thus a simple random and component-wise initialization may result in an 
@@ -252,19 +249,17 @@
     % \\I would put image of the network.
     % \\We can also specify the dimensions of the fetures after the QCNN, the QRNN and the FC.
     \section{Dataset}
-    We evaluate the proposed method involving the QCNN on a datatset, TAU Spatial Sound Events 2019 - Ambisonic, providing four-channel First-Order Ambisonic (FOA) recordings.\\
+    We evaluate the proposed method involving the QCRNN on a datatset, TAU Spatial Sound Events 2019 - Ambisonic, providing four-channel First-Order Ambisonic (FOA) recordings.\\
     The recordings on the dataset consist of stationary point sources from multiple sound classes each associated with a temporal onset and offset time, and DOA coordinate represented using azimuth and elevation angle.\\
-    The dataset consists of a development and evaluation set.  The development set consists of 400, one minute long recordings sampled at 48000 Hz, divided into four cross-validation splits of 100 recordings each. The evaluation set consists of 100 one-minute long recordings.\\
+    \\ The dataset consists of a development and evaluation set.  The development set consists of 400, one minute long recordings sampled at 48000 Hz, divided into four cross-validation splits of 100 recordings each. The evaluation set consists of 100 one-minute long recordings.\\
     These recordings were synthesized using spatial room impulse response (IRs) collected from five indoor locations, at 504 unique combinations of azimuth-elevation-distance. \\
     Additionally, half the number of record- ings have up to two temporally overlapping sound events, and the remaining have no overlapping.\\
     Finally, to create a realistic sound scene recording, natural ambient noise collected in the IR recording locations was added to the synthesized recordings such that the average SNR of the sound events was 30 dB.\\
     The only explicit difference between each of the development dataset splits and eval- uation dataset is the isolated sound event examples employed.\\
     The dataset consists of eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, keysDrop,  speech, keyboard, pageturn, cough, doorslam and laughter.\\
     The dataset contains 250 audio files, randomly divided into five splits in a way that in each split there is an equal number of examples for each class: we used the first four for training the network, while the remaining one is used for testing (20\%).
-    \paragraph{}
-    We wrote a Python script in order to divide the dataset in the right way. The script automatically divides the samples and creates the directories that the the program expects to receive.
-    \paragraph{}
-    The main division is about the number of overlaps, we have samples with two and one overlap. For each one of these subsets we have two directories: one with the file audio (in wav format) and the other for the labels (in csv format). The dataset results to be divided in 4 directories. 
+    \\ \\ We wrote a Python script in order to divide the dataset in the right way. The script automatically divides the samples and creates the directories that the the program expects to receive.
+    \\ The main division is about the number of overlaps, we have samples with two and one overlap. For each one of these subsets we have two directories: one with the file audio (in wav format) and the other for the labels (in csv format). The dataset results to be divided in 4 directories. 
     \section{Metrics}
     The SELD task can use individual SED and localization (DOA) metrics.
     \\ \\ For the SED task, we use the polyphonic SED metrics that are the F-score (ideally F = 1), based on the number of true and false positives, and the error rate (ER) (ideally ER = 0), based on the total number of active sound event classes in the ground truth.\\
@@ -272,7 +267,7 @@
     \\ \\ On the other hand, in order to measure the performance of the localization task, a DOA estimation error DOA$_{err}$ can be used as evaluation metric, based on estimated and ground truth DOAs.\\ Moreover, a frame recall metric K (ideally K = 1) can be used based on the percentage of true positives. \\
     A joint DOA score can be defined as $S_{DOA} = \dfrac{(DOA_{err}/180 + (1 - K))}{2}$.\\
     The lower the $S_{DOA}$ score, the better the results in terms of 3D localization.
-    Finally, an overall SELD score can be defined based on the previous metrics as $S_{SELD} = \dfrac{(S_{SED} + S_{DOA})}{2}$.\\
+    Finally, an overall SELD score can be defined based on the previous metrics as $S_{SELD} = \dfrac{(S_{SED} + S_{DOA})}{2}$.
     \section{Experimentation}
     We did experiments using two different approaches and for each model that we create after training, we computed confidence interval.
     \subsection*{First Experiment}
@@ -282,151 +277,166 @@
     We leave unchanged all the other parameters with these values: window length M=512, sequence length T=512 of frames, batch size 10, Q=128 nodes for the recurrent network and 32 nodes for fully connected layers.
     \\  \\ We trained this two models on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
     Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one overlap. In fact, having two different sound sources in the same time instant makes the problem of detecting and localizing the sources a lot more complex to solve for the network.
-	\\ \\We trained the models for $\sim$150 epochs.
+	\\ We trained the models for $\sim$150 epochs.
     \\ We discovered that the network with 32 number of filters in the QCNN layers performs slightly better than the model with only 16 filters.
     \subsection*{Second Experiment}
     In our second experiment, we compared the traditional approach used in this kind of problems (the Seld network based on normal convolutional layers) with the Quaternion based neural network.\\
     We trained both networks with the same data and studied the results.
     \\ \\ We couldn't extract the feature in the same way for both the models because they expect different inputs. While the traditional model expects as input some Fourier transform values, our network expects it in a Quaternion form. For this reason, we had to run two different scripts for extracting the features in the two different ways. 
-	\\ \\ For training our QCNN, we used the winning configuration of our first experiment (with 32 filters in the Quaternion Convolutional layers).
+	\\ \\ For training our QCRNN, we used the winning configuration of our first experiment (with 32 filters in the Quaternion Convolutional layers).
 	\\In the Seld Network we used the default parameters used by Sharath Adavanne, Archontis Politis, and Tuomas Virtanen in their work with the Seld-net. 
-	\\ \\ We trained the models for $\sim$150 epochs.
+	\\ We trained the models for $\sim$150 epochs.
     \section{Results}
-    1) GRAFICO 32 OV1 E OV2 (SELD SCORE, SED SCORE E DOA SCORE)
+	\subsection*{QCRNN with 32 filters}
+	The results made using the neural network set with 32 filters are shown.
+	\begin{figure}[hbt!]
+		\centering
+		\includegraphics[height=0.34\textwidth]{images/sed_score.png} \\
+		\caption{$S_{SED}$ evolution computed on the test set during the training}
+	\end{figure}
+	\begin{figure}[hbt!]
+		\centering
+		\includegraphics[height=0.34\textwidth]{images/doa_score.png} \\
+		\caption{$S_{DOA}$ evolution computed on the test set during the training}
+	\end{figure}
+	\begin{figure}[hbt!]
+		\centering
+		\includegraphics[height=0.34\textwidth]{images/seld_score.png}\\
+		\caption{$S_{SELD}$ evolution computed on the test set during the training}
+	\end{figure}
+	%\FloatBarrier
+	\\ \\ \\ We can see what we have achieved with both the two overlaps (ov1 and ov2). The red line refers to the 32 filter network with 2 overlaps (ov2), while the light blue line refers to the 32 filter network with a single sound overlap. Indeed, what can be seen from the graphs above is that the network with 32 filters with a single overlap is better than that with two overlaps. This is because the second overlap makes the sound less clear and more difficult to locate and reveal.
+	\\ In both cases the $S_{SED}$ score, $S_{DOA}$ score and $S_{SELD}$ score drop as the epoch increases, this means that the network continuously improves the results in order to obtain more and more better performances.
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{c|c}
+			& QCRNN \\
+			\hline
+			O1 \begin{tabular} {c}
+				$Error\hspace{0.2cm}rate$\\
+				$F1-score$ \\
+				$S_{SED}$ \\
+				$S_{DOA}$ \\
+				$S_{SELD}$
+			\end{tabular} & 
+			
+			\begin{tabular} {c}
+				0.6122 \\
+				0.4972\\
+				0.5575 \\
+				0.3478 \\
+				0.4527 
+			\end{tabular} \\
+			\hline
+			O2 \begin{tabular} {c}
+				$Error\hspace{0.2cm}rate$\\
+				$F1-score$ \\
+				$S_{SED}$ \\
+				$S_{DOA}$ \\
+				$S_{SELD}$
+			\end{tabular} & 
+			\begin{tabular} {c}
+				0.7529 \\
+				0.3646 \\
+				0.6941 \\
+				0.459 \\
+				0.5766
+			\end{tabular}
+		\end{tabular}
+		\caption{The best results of the TAT Dataset in terms of the SED score, DOA score and SELD score considering neural network with 32 filters. In the case of ov1 we obtained the best values in epoch 156, instead for ov2 in epoch 133.}
+	\end{table}
+    \subsection*{Experiments carried out: QCRNN 16, QCRNN 32 and CNN}
     \paragraph{}
-    \begin{center}
-    
-    \begin{tabular}{c|c}
-    	& QCRNN \\
-     	\hline
-    	O1 \begin{tabular} {c}
-    		$Error\hspace{0.2cm}rate$\\
-    		$F1-score$ \\
-    		$S_{SED}$ \\
-    		$S_{DOA}$ \\
-    		$S_{SELD}$
-    	\end{tabular}& \begin{tabular} {c}
-    	0.6122 \\
-    	0.4972\\
-    	0.5575 \\
-    	0.3478 \\
-    	0.4527 
-    \end{tabular} \\
-
-	\hline
-	O2 \begin{tabular} {c}
-		$Error\hspace{0.2cm}rate$\\
-		$F1-score$ \\
-		$S_{SED}$ \\
-		$S_{DOA}$ \\
-		$S_{SELD}$
-	\end{tabular}& \begin{tabular} {c}
-		0.7529 \\
-		0.3646 \\
-		0.6941 \\
-		0.459 \\
-		0.5766
-	\end{tabular}
-    \end{tabular}
-        \end{center}
-
-	\paragraph{}
-	2) GRAFICO TUTTI CON OV1 (SELD SCORE, SED SCORE E DOA SCORE)
-	\\ 3) GRAFICO TUTTI CON OV2 (SELD SCORE, SED SCORE E DOA SCORE)\\
-\FloatBarrier
-
-\begin{figure}
-\centering
-
-\includegraphics[height=0.4\textwidth]{images/sed_score.png} \\
-\caption{$S_{SED}$ evolution computed on the test set during the training}
-\vspace{1em}
-\includegraphics[height=0.4\textwidth]{images/doa_score.png} \\
-\caption{$S_{DOA}$ evolution computed on the test set during the training}
-\vspace{1em}
-\includegraphics[height=0.4\textwidth]{images/seld_score.png}\\
-\caption{$S_{SELD}$ evolution computed on the test set during the training}
-\end{figure}
-\FloatBarrier
-    \paragraph{}
-    \begin{center}
-    
-    
-    \begin{tabular}{c|c|c|c}
-
-     & QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
-    \hline
-    O1 \begin{tabular} {c}
-    	$S_{SED}$ \\
-    	$S_{DOA}$ \\
-    	$S_{SELD}$
-    \end{tabular}& 
-	\begin{tabular} {c}
-    1 \\
-    2 \\
-    3
-	\end{tabular}& \begin{tabular} {c}
-	1 \\
-	2 \\
-	3
-\end{tabular}&
-\begin{tabular} {c}
-1 \\
-2 \\
-3
-\end{tabular} \\
-    \hline
-    O2 \begin{tabular} {c}
-    	$S_{SED}$ \\
-    	$S_{DOA}$ \\
-    	$S_{SELD}$
-    \end{tabular}& & & \\
-    
-    \end{tabular}
-\end{center}	
-RISULTATI INTERVALLO DI CONFIDENZA (una riga)
-\FloatBarrier
-\begin{figure}
-\centering
-
-\begin{minipage}{0.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{images/doa_score.png}
-  \captionof{figure}{$S_{SED}$ Score on ov1}
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{images/doa_score.png}
-  \captionof{figure}{$S_{SED}$ Score on ov2}
-  
-\end{minipage}\\
-\vspace{1em}
-\begin{minipage}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{images/doa_score.png}
-  \captionof{figure}{$S_{DOA}$ Score on ov1}
-
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{images/doa_score.png}
-  \captionof{figure}{$S_{DOA}$ Score on ov2}
-\end{minipage}\\
-\vspace{1em}
-\begin{minipage}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{images/doa_score.png}
-  \captionof{figure}{$S_{SELD}$ Score on ov1}
-
-\end{minipage}%
-\begin{minipage}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{images/doa_score.png}
-  \captionof{figure}{$S_{SELD}$ Score on ov2}
-\end{minipage}
-
-\end{figure}
-\FloatBarrier
+	\begin{figure}[hbt!]
+	\centering
+	\begin{minipage}{0.5\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \captionof{figure}{$S_{SED}$ Score on ov1}
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \captionof{figure}{$S_{SED}$ Score on ov2}
+	\end{minipage}\\
+	\vspace{1em}
+	\begin{minipage}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \captionof{figure}{$S_{DOA}$ Score on ov1}
+	
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \captionof{figure}{$S_{DOA}$ Score on ov2}
+	\end{minipage}\\
+	\vspace{1em}
+	\begin{minipage}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \captionof{figure}{$S_{SELD}$ Score on ov1}
+	
+	\end{minipage}%
+	\begin{minipage}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \captionof{figure}{$S_{SELD}$ Score on ov2}
+	\end{minipage}
+	\end{figure} 
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{c|c|c|c}
+			& QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
+			\hline
+			O1 \begin{tabular} {c}
+				$S_{SED}$ \\
+				$S_{DOA}$ \\
+				$S_{SELD}$
+			\end{tabular}& 
+			\begin{tabular} {c}
+				1 \\
+				2 \\
+				3
+			\end{tabular} & 
+			\begin{tabular} {c}
+				0.6122 \\
+				0.4972\\
+				0.5575 \\
+				0.3478 \\
+				0.4527 
+			\end{tabular}&
+			\begin{tabular} {c}
+				1 \\
+				2 \\
+				3
+			\end{tabular} \\
+			\hline
+			O2 \begin{tabular} {c}
+				$S_{SED}$ \\
+				$S_{DOA}$ \\
+				$S_{SELD}$
+			\end{tabular}& 
+			\begin{tabular} {c}
+				1 \\
+				2 \\
+				3
+			\end{tabular} & 
+			\begin{tabular} {c}
+				0.7529 \\
+				0.3646 \\
+				0.6941 \\
+				0.459 \\
+				0.5766
+			\end{tabular}&
+			\begin{tabular} {c}
+				1 \\
+				2 \\
+				3
+			\end{tabular} \\
+		\end{tabular}
+		\caption{The best results of the TAT Dataset in terms of the SED score, DOA score and SELD score considering several experiments.}
+	\end{table}	
     \section{Conclusion}
     Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
     \\ Confronto tra i risultati di 16 con quelli da 32, in particolare tra i due overlap (cioè i ov1 separati da ov2). Inoltre, evidenziare che con 32 si ottengono risultati migliori. Spiegazione del perchè 32 è meglio.
