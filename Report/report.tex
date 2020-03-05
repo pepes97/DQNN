@@ -11,6 +11,13 @@
 \usepackage{caption}
 \usepackage{placeins}
 \usepackage{subcaption}
+\usepackage[dvipsnames]{xcolor}
+
+\definecolor{myred}{RGB}{143, 42, 12}
+\definecolor{myblue}{RGB}{58, 83, 197}
+\definecolor{myorange}{RGB}{219, 146, 0}
+
+
 
 % \sectionfont{\centering}
 \usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
@@ -268,7 +275,7 @@
     The lower the $S_{DOA}$ score, the better the results in terms of 3D localization.
     Finally, an overall SELD score can be defined based on the previous metrics as $S_{SELD} = \dfrac{(S_{SED} + S_{DOA})}{2}$.
     \section{Experimentation}
-    We did experiments using two different approaches and for each model that we create after training, we computed confidence interval.
+    We did experiments using two different approaches. After training, we computed confidence interval for each model that we created.
     \subsection*{First Experiment}
     In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, in particular we changed the number of filters in the Quaternion convolutional layers, in order to discover what is the behavior of the network and its results with respect to the different parameters.
     \\ \\ We did our experiments tring the values 16 and 32 for the hyperparameter of the number of filters (the hyperparameter \textbf{P}) in the QCNN layers.
@@ -281,13 +288,13 @@
     \subsection*{Second Experiment}
     In our second experiment, we compared the traditional approach used in this kind of problems (the Seld network based on normal convolutional layers) with the Quaternion based neural network.\\
     We trained both networks with the same data and studied the results.
-    \\ \\ We couldn't extract the feature in the same way for both the models because they expect different inputs. While the traditional model expects as input some Fourier transform values, our network expects it in a Quaternion form. For this reason, we had to run two different scripts for extracting the features in the two different ways. 
+    \\ \\ We couldn't extract the feature in the same way for both the models because they expect different inputs. While the traditional model expects as input some Fourier transformed values, our network expects it in a Quaternion form. For this reason, we had to run two different scripts for extracting the features in the two different ways. 
 	\\ \\ For training our QCRNN, we used the winning configuration of our first experiment (with 32 filters in the Quaternion Convolutional layers).
 	\\In the Seld Network we used the default parameters used by Sharath Adavanne, Archontis Politis, and Tuomas Virtanen in their work with the Seld-net. 
 	\\ We trained the models for $\sim$150 epochs.
     \section{Results}
-	\subsection*{QCRNN with 32 filters}
-	The results made using the neural network set with 32 filters are shown.
+	\subsection*{QCRNN with 32 filters in the Quaternion Convolutional layers}
+	The results made using the neural network set with 32 filters in the convolutional layer are shown.
 	\begin{figure}[hbt!]
 		\centering
 		\includegraphics[height=0.34\textwidth]{images/sed_score.png} \\
@@ -304,7 +311,7 @@
 		\caption{$S_{SELD}$ evolution computed on the test set during the training}
 	\end{figure}
 	%\FloatBarrier
-	\\ \\ \\ We can see what we have achieved with both the two overlaps (ov1 and ov2). The red line refers to the 32 filter network with 2 overlaps (ov2), while the light blue line refers to the 32 filter network with a single sound overlap. Indeed, what can be seen from the graphs above is that the network with 32 filters with a single overlap is better than that with two overlaps. This is because the second overlap makes the sound less clear and more difficult to locate and reveal.
+	\\ \\ \\ We can see what we have achieved with the same network on both the two overlaps (ov1 and ov2). The red line refers to the 32 filter network trained on the samples with 2 overlaps (ov2), while the light blue line refers to the same network trained on samples with a single sound overlap (ov1). Indeed, what can be seen from the graphs above is that the network performs better with samples with a single overlap than that with two overlaps. This is because the second overlap makes the sound less clear and more difficult to locate and reveal.
 	\\ In both cases the $S_{SED}$ score, $S_{DOA}$ score and $S_{SELD}$ score drop as the epoch increases, this means that the network continuously improves the results in order to obtain more and more better performances.
 	\begin{table}[h!]
 		\centering
@@ -342,7 +349,7 @@
 				0.5766
 			\end{tabular}
 		\end{tabular}
-		\caption{The best results of the TAT Dataset in terms of the SED score, DOA score and SELD score considering neural network with 32 filters. In the case of ov1 we obtained the best values in epoch 156, instead for ov2 in epoch 133.}
+		\caption{The best results of the network on the TAU Dataset in terms of the SED score, DOA score and SELD score considering neural network with 32 filters in the quaternion convolutional layers. In the case of ov1 we obtained the best values in epoch 156, instead for ov2 in epoch 133.}
 	\end{table}
     \subsection*{Experiments carried out: QCRNN 16, QCRNN 32 and CNN}
     \paragraph{}
@@ -381,12 +388,24 @@
 	  \centering
 	  \includegraphics[width=\linewidth]{images/seld_score_ov2.png}
 	  \captionof{figure}{$S_{SELD}$ Score on ov2}
+	\end{minipage}\\
+	\vspace{2em}
+
+	\begin{minipage}{.45\textwidth}
+	  (a) {\color{orange} \textbf{orange}}: QCRNN net with 16 filters in the quaternion convolutional layers;\\
+	  (b) {\color{myblue} \textbf{blue}}: QCRNN net with 32 filters in the quaternion convolutional layers;\\
+	  (c) {\color{myred} \textbf{red}}: Traditional Seld-net CRNN approach with default parameters;\\
+	\end{minipage}%
+	\begin{minipage}{.05\textwidth}
+	  \hspace{1em}
+	\end{minipage}%
+	\begin{minipage}{.45\textwidth}
+	  (a) {\color{myblue} \textbf{blue}}: QCRNN net with 16 filters in the quaternion convolutional layers;\\
+	  (b) {\color{orange} \textbf{orange}}: QCRNN net with 32 filters in the quaternion convolutional layers;\\
+	  (c) {\color{myred} \textbf{red}}: Traditional Seld-net CRNN approach with default parameters;\\
 	\end{minipage}
 	\end{figure} 
-	\paragraph{}
-	PER OV1: ARANCIONE è 16 FILTRI QUATERNIONI, BLU è 32 FILTRI QUATERNIONI E ROSSA è LA CNN DEGLI INDIANI.
-	\\ \\
-	PER OV2: ARANCIONE è 32 FILTRI QUATERNIONI, BLU è 16 FILTRI QUATERNIONI E ROSSA è LA CNN DEGLI INDIANI.
+\FloatBarrier
 	
 	\begin{table}[h!]
 		\centering
@@ -451,7 +470,7 @@
 				0.7208
 			\end{tabular} \\
 		\end{tabular}
-		\caption{The best results of the TAT Dataset in terms of the SED score, DOA score and SELD score considering several experiments. In the case of ov1 we obtained the best values for 16 filter in epoch 145 and for CNN in epoch 142. Indeed in ov2 we obtained the best values for 16 filter in epoch 114 and for CNN in epoch 141.}
+		\caption{The best results on the TAU Dataset in terms of the SED score, DOA score and SELD score considering several experiments. We considered the values referred to the best epoch for each model.}
 	\end{table}	
     \section{Conclusion}
     Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
