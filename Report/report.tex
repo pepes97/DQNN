@@ -170,8 +170,8 @@
     In particular, we have three convolutional layers based on quaternions (QCNN), two recurrent layers (QRNN) and finally two parallel 
     outputs, both are composed of two fully-connected layers, which obviously differ in their activation functions and size that 
     receive input from previous layers.
-    \\ The QCNN layers are composed of P filter kernels with size $3x3x8$. 
-    \\ The three convolutional layers (QCNN) consist of 3 stages: Convolutional, Detector and  Pooling.
+    \\ The QCNN are composed of P filter kernels with size $3x3x8$. 
+    \\ The three convolutional networks (QCNN) consist of 3 stages: Convolutional, Detector and  Pooling.
     \\ The first stage consists of the convolutional process to the inputs. Since these are quaternions, the convolutional process 
     consists of Hamilton's product:
     \begin{equation*}
@@ -202,7 +202,7 @@
     thus maintaining the process of effectively training of the model. In our network we use MaxPooling.
     MaxPooling is done by applying a max filter to non-overlapping subregions of the initial representation.
     \\ Max-pooling is applied along the frequency axis for 
-    dimensionality reduction while preserving the sequence length T, we obtain in the end that the output of the 3 QCN has 
+    dimensionality reduction while preserving the sequence length T, we obtain in the end that the output of the 3 QCNN has 
     dimension T x 8P and fed to bidirectional QRNN layers to better catch the time progress of the input signals.  
     \\ The network also uses the Dropout technique, which consists in randomly removing network units with some probability $\beta$.
     \\ \\ QRNN are recurring neural networks based on quaternions.
@@ -237,7 +237,7 @@
             w_Z = \phi u_Z^\triangleleft\sin{(\theta)}
         \end{cases}
     \end{equation*}
-    where $\theta$ is randomly generated in the range $[-\pi, \pi]$ and $\phi$ is a randomly enerated variable related to the variance
+    where $\theta$ is randomly generated in the range $[-\pi, \pi]$ and $\phi$ is a randomly generated variable related to the variance
     of the quaternion weight, defined as var(W) = $E\{|W|\} - (E\{|W|\})^2 $. where  the second term is null due to the symmetric distribution
     of the weight around 0. Since W follows a Chi distribution with four degrees of freedom, the variance can be expressed as:
     \begin{equation*}
