@@ -75,13 +75,13 @@
     \\ \\ The vector of acoustic intensity, also called sound field, is produced by average of the sound pressure, $p[n]$, and
     the particle velocity, $v[n]$, over time:
     \begin{equation*}
-        I[n]=p[n]v[n]
+        I[n]=p[n] \cdot v[n]
     \end{equation*}
     In addition, the sound field provides the magnitude and direction of the flow of sound energy.
     \\ Since we are using the representation of quaternions with the B-format Ambisonic we are going to rewrite the sound 
     pressure and speed.
     \\ Sound pressure is defined by the signal captured by the omnidirectional signal, $p[n] = x_W[n]$.
-    While the particle velocity is defined by the three orthogonal figure-of-eight microphone signals, $v[n]= \frac{-1}{p_0c\sqrt{3}}$,
+    While the particle velocity is defined by the three orthogonal figure-of-eight microphone signals, $v[n]= \frac{-1}{p_0c\sqrt{3}}$ $\cdot$
     $\begin{bmatrix}
             x_X[n] \\
             x_Y[n] \\
@@ -94,20 +94,19 @@
     \\ So the acoustic intensity will be equal to:
     \begin{equation*}
         \begin{matrix}
-            I[k,n] = p^*[k,n] v[k,n] \\
-            \hspace{1.8cm} = I_a[k,n]+jI_r[k,n]
+            I[k,n] = p^*[k,n] \cdot v[k,n] = I_a[k,n]+jI_r[k,n]
         \end{matrix}
     \end{equation*}
     where * denotes the complex conjugation.
     \\ $I_a$ and $I_r$ are the two components that make up the acoustic intensity, respectively the active and reactive intensity.
     \\ Active intensity is the time average of the acoustic intensity:
     \begin{equation*}
-        I_a [k,n]= \Re\{ p^*[k,n]v[k,n]\} 
+        I_a [k,n]= \Re\{ p^*[k,n]\cdot v[k,n]\} 
     \end{equation*}
     which corresponds to transport of sound energy and whose mean value is non-zero.
     \\ Reactive intensity is defined as the imaginary counterpart of active intensity:
     \begin{equation*}
-        I_r [k,n]= \Im \{ p^*[k,n]v[k,n]\} 
+        I_r [k,n]= \Im \{ p^*[k,n] \cdot v[k,n]\} 
     \end{equation*}
     which corresponds to the dissipative energy transport and whose mean value is zero.
     \\ Since the intensity vectors contain the information of theacoustical energy direction of a sound wave, the acoustic intensity
@@ -125,18 +124,18 @@
     \\ Input features can be expressed by the two quaternions $q_a[k,n]$ and $q_r[k,n]$:
     \begin{equation*}
             \begin{matrix}
-                q_a[k,n]=\Re\{x_W^*[k,n]x_W[k,n]\} \\
-                \hspace{1cm} + \Re\{x_W^*[k,n]x_X[k,n]\}\hat{i} \\
-                \hspace{1cm} + \Re\{x_W^*[k,n]x_Y[k,n]\}\hat{j} \\
-                \hspace{1cm} + \Re\{x_W^*[k,n]x_Z[k,n]\}\hat{k} \\
+                q_a[k,n]=\Re\{x_W^*[k,n] \cdot x_W[k,n]\} \\
+                \hspace{1cm} + \Re\{x_W^*[k,n] \cdot x_X[k,n]\}\hat{i} \\
+                \hspace{1cm} + \Re\{x_W^*[k,n] \cdot x_Y[k,n]\}\hat{j} \\
+                \hspace{1cm} + \Re\{x_W^*[k,n]\cdot x_Z[k,n]\}\hat{k} \\
             \end{matrix}
     \end{equation*}
     \begin{equation*}
         \begin{matrix}
-            q_r[k,n]=\Im\{x_W^*[k,n]x_W[k,n]\} \\
-            \hspace{1cm} + \Im\{x_W^*[k,n]x_X[k,n]\}\hat{i} \\
-            \hspace{1cm} + \Im\{x_W^*[k,n]x_Y[k,n]\}\hat{j} \\
-            \hspace{1cm} + \Im\{x_W^*[k,n]x_Z[k,n]\}\hat{k} \\
+            q_r[k,n]=\Im\{x_W^*[k,n]\cdot x_W[k,n]\} \\
+            \hspace{1cm} + \Im\{x_W^*[k,n]\cdot x_X[k,n]\}\hat{i} \\
+            \hspace{1cm} + \Im\{x_W^*[k,n] \cdot x_Y[k,n]\}\hat{j} \\
+            \hspace{1cm} + \Im\{x_W^*[k,n]\cdot x_Z[k,n]\}\hat{k} \\
         \end{matrix}
     \end{equation*}
     We normalize each time-frequency bin by its total energy $\epsilon_T=\epsilon_P+\epsilon_K$, where $\epsilon_P=|x_W[k, n]|^2$ 
@@ -208,7 +207,7 @@
     multi-class multilabel classification and DOA as multi-output regression; together producing the SELD output.
     \begin{figure}[htb!]
         \centering
-        \fbox{\includegraphics[width=0.5\linewidth]{QRCNN}}
+        \fbox{\includegraphics[width=0.5\linewidth]{images/QCRNN.jpg}}
         \caption{Quaternion Convolutional Neural Network}
         \label{fig:dqnn}
     \end{figure}
@@ -351,91 +350,108 @@
 	\centering
 	\begin{minipage}{0.5\textwidth}
 	  \centering
-	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \includegraphics[width=\linewidth]{images/sed_score_ov1.png}
 	  \captionof{figure}{$S_{SED}$ Score on ov1}
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 	  \centering
-	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \includegraphics[width=\linewidth]{images/sed_score_ov2.png}
 	  \captionof{figure}{$S_{SED}$ Score on ov2}
 	\end{minipage}\\
 	\vspace{1em}
 	\begin{minipage}{.5\textwidth}
 	  \centering
-	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \includegraphics[width=\linewidth]{images/doa_score_ov1.png}
 	  \captionof{figure}{$S_{DOA}$ Score on ov1}
 	
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 	  \centering
-	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \includegraphics[width=\linewidth]{images/doa_score_ov2.png}
 	  \captionof{figure}{$S_{DOA}$ Score on ov2}
 	\end{minipage}\\
 	\vspace{1em}
 	\begin{minipage}{.5\textwidth}
 	  \centering
-	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \includegraphics[width=\linewidth]{images/seld_score_ov1.png}
 	  \captionof{figure}{$S_{SELD}$ Score on ov1}
 	
 	\end{minipage}%
 	\begin{minipage}{.5\textwidth}
 	  \centering
-	  \includegraphics[width=\linewidth]{images/doa_score.png}
+	  \includegraphics[width=\linewidth]{images/seld_score_ov2.png}
 	  \captionof{figure}{$S_{SELD}$ Score on ov2}
 	\end{minipage}
 	\end{figure} 
+	\paragraph{}
+	PER OV1: ARANCIONE è 16 FILTRI QUATERNIONI, BLU è 32 FILTRI QUATERNIONI E ROSSA è LA CNN DEGLI INDIANI.
+	\\ \\
+	PER OV2: ARANCIONE è 32 FILTRI QUATERNIONI, BLU è 16 FILTRI QUATERNIONI E ROSSA è LA CNN DEGLI INDIANI.
+	
 	\begin{table}[h!]
 		\centering
 		\begin{tabular}{c|c|c|c}
 			& QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
 			\hline
 			O1 \begin{tabular} {c}
+				$Error\hspace{0.2cm}rate$ \\
+				$F1-score$ \\
 				$S_{SED}$ \\
 				$S_{DOA}$ \\
 				$S_{SELD}$
 			\end{tabular}& 
 			\begin{tabular} {c}
-				1 \\
-				2 \\
-				3
+				0.6666 \\
+				0.4625 \\
+				0.5976 \\
+				0.3586 \\
+				0.4781
 			\end{tabular} & 
 			\begin{tabular} {c}
 				0.6122 \\
 				0.4972\\
-				0.5575 \\
-				0.3478 \\
-				0.4527 
+				\textbf{0.5575} \\
+				\textbf{0.3478} \\
+				\textbf{0.4527} 
 			\end{tabular}&
 			\begin{tabular} {c}
-				1 \\
-				2 \\
-				3
+				0.9444 \\
+				0.07491 \\
+				0.9401 \\
+				0.434 \\
+				0.6843
 			\end{tabular} \\
 			\hline
 			O2 \begin{tabular} {c}
+				$Error\hspace{0.2cm}rate$ \\
+				$F1-score$ \\
 				$S_{SED}$ \\
 				$S_{DOA}$ \\
 				$S_{SELD}$
 			\end{tabular}& 
 			\begin{tabular} {c}
-				1 \\
-				2 \\
-				3
+				0.7607 \\
+				0.3538 \\
+				0.7035 \\
+				0.4655 \\
+				0.5845
 			\end{tabular} & 
 			\begin{tabular} {c}
 				0.7529 \\
 				0.3646 \\
-				0.6941 \\
-				0.459 \\
-				0.5766
+				\textbf{0.6941} \\
+				\textbf{0.459} \\
+				\textbf{0.5766}
 			\end{tabular}&
 			\begin{tabular} {c}
-				1 \\
-				2 \\
-				3
+				0.9323 \\
+				0.1126 \\
+				0.9147 \\
+				0.5268 \\
+				0.7208
 			\end{tabular} \\
 		\end{tabular}
-		\caption{The best results of the TAT Dataset in terms of the SED score, DOA score and SELD score considering several experiments.}
+		\caption{The best results of the TAT Dataset in terms of the SED score, DOA score and SELD score considering several experiments. In the case of ov1 we obtained the best values for 16 filter in epoch 145 and for CNN in epoch 142. Indeed in ov2 we obtained the best values for 16 filter in epoch 114 and for CNN in epoch 141.}
 	\end{table}	
     \section{Conclusion}
     Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
