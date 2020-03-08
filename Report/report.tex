@@ -471,8 +471,36 @@
 			\end{tabular} \\
 		\end{tabular}
 		\caption{The best results on the TAU Dataset in terms of the SED score, DOA score and SELD score considering several experiments. We considered the values referred to the best epoch for each model.}
-	\end{table}	
-    \section{Conclusion}
+\end{table}
+\FloatBarrier
+In the sequent plots are represented the confidence intervals for the prediction on the localization of the sound source (\textit{x} and \textit{y} coordinates) for each network tested on the different overlap.\\
+\FloatBarrier
+\begin{figure}[hbt!]
+		\centering
+		\includegraphics[width=0.6\textwidth]{images/ov1_conf.png} 
+	\end{figure}
+	\begin{figure}[hbt!]
+		\centering
+		\includegraphics[width=0.6\textwidth]{images/ov2_conf.png} 
+	\end{figure}
+
+The confidence intervals of the classification error rate computed with 95\% of confidence are reported in the sequent table.\\
+\FloatBarrier
+\begin{table}[h!]
+\centering
+\begin{tabular}{c|c|c|c}
+& QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
+\hline
+O1 & $0.6610\sim 0.6647$ & $\textbf{0.6162}\sim \textbf{0.6199}$ & $0.7799\sim 0.7831$\\
+\hline
+O2 & $0.7541\sim 0.7574$& $\textbf{0.7512}\sim \textbf{0.7545}$& $0.7917\sim 0.7948$\\
+\end{tabular}
+\end{table}
+\FloatBarrier
+Also in this way, we can see that the best results of our experiments are reached with the QCRNN Net with 32 filters.
+
+
+\section{Conclusion}
     Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
     \\ Confronto tra i risultati di 16 con quelli da 32, in particolare tra i due overlap (cioè i ov1 separati da ov2). Inoltre, evidenziare che con 32 si ottengono risultati migliori. Spiegazione del perchè 32 è meglio.
     \\ Analisi complessiva delle diffenze dell'andamento della rete dei quaternioni con quella normale (CNN). In particolare, sottolineando che quella dei quaternioni risulta essere migliore e perchè.
