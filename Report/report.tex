@@ -275,23 +275,21 @@
     The lower the $S_{DOA}$ score, the better the results in terms of 3D localization.
     Finally, an overall SELD score can be defined based on the previous metrics as $S_{SELD} = \dfrac{(S_{SED} + S_{DOA})}{2}$.
     \section{Experimentation}
-    We did experiments using two different approaches. After training, we computed confidence interval for each model that we created.
+    We did experiments using two different approaches, both by modifying the parameters and evaluating the results using a different network, and the models have been trained over 150 epochs.\\
+    **After training, we computed confidence interval for each model that we created.**
     \subsection*{First Experiment}
-    In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, in particular we changed the number of filters in the Quaternion convolutional layers, in order to discover what is the behavior of the network and its results with respect to the different parameters.
-    \\ \\ We did our experiments tring the values 16 and 32 for the hyperparameter of the number of filters (the hyperparameter \textbf{P}) in the QCNN layers.
-    This led to a huge difference in the number of parameters of the models. While in the model with 16 filters there are 270.657 trainable parameters in the model with 32 there are 425.985 parameters.
-    We leave unchanged all the other parameters with these values: window length M=512, sequence length T=512 of frames, batch size 10, Q=128 nodes for the recurrent network and 32 nodes for fully connected layers.
-    \\  \\ We trained this two models on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
-    Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one overlap. In fact, having two different sound sources in the same time instant makes the problem of detecting and localizing the sources a lot more complex to solve for the network.
-	\\ We trained the models for $\sim$150 epochs.
-    \\ We discovered that the network with 32 number of filters in the QCNN layers performs slightly better than the model with only 16 filters.
+    In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, in particular we changed the number of filters in the Quaternion convolutional layers, in order to discover what is the behavior of the network and its results with respect to the different parameters.\\
+    To this end, we set a number of P = 32 filters in the QCNN layers of the first models, and P = 16 filters for the second ones, analyzing the results on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
+    This led to a huge difference in the number of parameters of the models: in the model with P = 16 filters there are more or less 270k trainable parameters, in the model with P = 32 there are about 425k parameters.\\
+    We left unchanged all the other parameters: sequence length of T = 512 frames, window length M = 512, batch size of 10, Q = 128 nodes for the recurrent networks and R = 32 nodes for the fully connected layers.
     \subsection*{Second Experiment}
-    In our second experiment, we compared the traditional approach used in this kind of problems (the Seld network based on normal convolutional layers) with the Quaternion based neural network.\\
-    We trained both networks with the same data and studied the results.
-    \\ \\ We couldn't extract the feature in the same way for both the models because they expect different inputs. While the traditional model expects as input some Fourier transformed values, our network expects it in a Quaternion form. For this reason, we had to run two different scripts for extracting the features in the two different ways. 
-	\\ \\ For training our QCRNN, we used the winning configuration of our first experiment (with 32 filters in the Quaternion Convolutional layers).
-	\\In the Seld Network we used the default parameters used by Sharath Adavanne, Archontis Politis, and Tuomas Virtanen in their work with the Seld-net. 
-	\\ We trained the models for $\sim$150 epochs.
+    In our second experiment, we compare the proposed quaternion CRNN with the traditional approach used in this kind of problems (a SELDnet architecture based on normal convolutional layer): we found a project developed by a group of researches\footnote{ Sharath Adavanne, Archontis Politis, and Tuomas Virtanen. Github account: https://github.com/sharathadavanne/seld-dcase2019} and we trained both networks on the same dataset (TAU Spatial Sound Events 2019 - Ambisonic), distinguishing one and two overlaps with the aim of studying the results.\\
+    \\
+    We had to make some changes on the new network in order to adapt it to our needs. For example we couldn't extract the features in the same way of the QCRNN because the new network expects different inputs: while our network expects inputs in a Quaternion form, the traditional model expects as input some Fourier transformed values. For this reason, we had to run two different scripts for extracting the features in the two different ways. \\
+    Another thing to do was to split the dataset in the same way we did before, in order to train the models on the same sets of audio files.\\
+	For the rest we have left unchanged the default parameters set by the developers in their work with the Seld-net (T = 128, M = 2048, C = 4, P = 64, MP1 = MP2 = 8, MP3 = 4, Q = R = 128, N = 11).\\
+	\\
+	In order to provide a fair comparison, we have choosen a configuration such to have a comparable number of parameters for both the models. In particular, we used the winning configuration of our first experiment (P = 32 filters), in order to have about 425k parameters for the proposed quaternion network and about 461k parameters for the SELDnet, so the number of parameters is very similar and in this way the results are comparable. \\
     \section{Results}
 	\subsection*{QCRNN with 32 filters in the Quaternion Convolutional layers}
 	The results made using the neural network set with 32 filters in the convolutional layer are shown.
@@ -473,7 +471,17 @@
 		\caption{The best results on the TAU Dataset in terms of the SED score, DOA score and SELD score considering several experiments. We considered the values referred to the best epoch for each model.}
 	\end{table}	
     \section{Conclusion}
-    Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
-    \\ Confronto tra i risultati di 16 con quelli da 32, in particolare tra i due overlap (cioè i ov1 separati da ov2). Inoltre, evidenziare che con 32 si ottengono risultati migliori. Spiegazione del perchè 32 è meglio.
-    \\ Analisi complessiva delle diffenze dell'andamento della rete dei quaternioni con quella normale (CNN). In particolare, sottolineando che quella dei quaternioni risulta essere migliore e perchè.
+    In this work, we propose a quaternion-valued deep neural network for the localization of 3D sound events recorded by first-order Ambisonics.\\
+    The proposed network involves the convolution process, as well as the rest of the processing, in the quaternion domain, thus resulting in improved performance and reduced number of parameters. The proposed method involves quaternion-valued acoustic intensity vectors as input features, which provide a more accurate DOA estimation.\\
+    The method is assessed on the FOA dataset (TAU Spatial Sound Events 2019 - Ambisonic), that involves up to 2 overlapping sound events to be localized.\\
+    \\
+    Fixed the parameter P = 32 filters, we analyze the different results considering sounds with one or two overlaps.\\
+    Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one overlap (in splits ov2, the scores are slightly higher). In fact, having two different sound sources in the same time instant makes the problem of detecting and localizing the sources a lot more complex to solve for the network.\\
+    \\
+    Then we compared the QCNN with P = 32 filters and P = 16 filters.\\
+    The reduction of the number of parameters results in poor performance in the proposed method, infact, we discovered that the network with P = 32 filters in the QCNN layers performs slightly better than the model with only 16 filters.\\
+    \\ 
+    Finally we thought it could be interesting to compare the results obtained with a SELDnet architecture based on normal convolutional layer.\\
+    We set the parameters of the various models so that we find ourselves in similar situations that we can compare.\\
+    Overall, as we expected, results have proved that the use of quaternion-valued acoustic intensity vector as input features leads to an improvement of 3D SELD performance in challenging environments compared to .\\
 \end{document}
