@@ -38,7 +38,7 @@
     %     in space by using quaternion-valued data processing.
     % \end{abstract}
     \section{Introduction}
-    Sound source localization is a fundamental task, expecially in revembrant and multiple sources envoirments; it includes recognizing the temporal onset and offset of sound events when active, classifying the sound events into known set of classes, and further localizing the events in space when active using their direction of arrival (DOA).\\
+    Sound source localization is a fundamental task, especially in revembrant and multiple sources environments; it includes recognizing the temporal onset and offset of sound events when active, classifying the sound events into known set of classes, and further localizing the events in space when active using their direction of arrival (DOA).\\
     In this project, we work with 3D audio sounds captured by first-order Ambisonic microphone and these sounds are then represented 
     by spherical harmonics decomposition in the quaternion domain.
     \\ The aim of the project is to detect the temporal activities of a known set of sound event classes and to further locate them in 
@@ -58,7 +58,7 @@
     speed.
     \\ The pressure microphone is an omnidirectional microphone that has unity gain in all directions. It is indicated by the letter W 
     and corresponds to the spherical harmonic function of order 0.
-    Instead the other three microphones are denoted respectively with X, Y, Z and correspond to the harmonic functions of order 1.
+    Instead, the other three microphones are denoted with X, Y, Z and correspond to the harmonic functions of order 1.
     \\ Our goal is to use spherical harmonics in the quaternion domain, so let's consider four ambisonic signals, namely $x_W[n]$, 
     $x_X[n]$, $x_Y[n]$ e $x_Z[n]$, as a single quaternion signal:
     \begin{equation*}
@@ -75,8 +75,8 @@
     \end{equation*}
     The factor $\frac{1}{\sqrt{3}}$ to the omnidirectional microphone allows to attenuate the average energy of that channel by 
     3 dB about on the full sphere, thus making it equal to the average energy of all the other channels.
-    \\ We note that $x_W[n]$ is the real component of the quaternion signal, while the $x_X[n]$, $x_Y[n]$ and $x_Z[n]$ are 
-    considered the imaginary components.
+    \\ We note that $x_W[n]$ is the real part of the quaternion signal, while the $x_X[n]$, $x_Y[n]$ and $x_Z[n]$ are 
+    considered the imaginary parts.
     \\ Now we have to derive the quaternion-value input features that will be passed to the network, to do this we need the
     acoustic intensity.
     \\ \\ The vector of acoustic intensity, also called sound field, is produced by average of the sound pressure, $p[n]$, and
@@ -124,10 +124,10 @@
     by sound directed by a single source, opposed to overlapping sources or reverberation. 
     \\ In this way, the active and reactive intensity vectors are both extracted from the spectrogram from each audio channel and 
     are used as separate functions.
-    \\ We use both the active and reactive intensity vectors across all frequency bins in the STFT domain as input features,
+    \\ \\ We use both the active and reactive intensity vectors across all frequency bins in the STFT domain as input features,
     in particular,  in order to represent the active and reactive intensity vectors we encapsulate the information in two quaternions. 
     \\  Since we have three components for each intensity vector, we also consider one more channel related to the magnitude of the
-    omnidirectional microphone signal in order to improve the performances of the localization task.
+    omnidirectional microphone signal to improve the performances of the localization task.
     \\ Input features can be expressed by the two quaternions $q_a[k,n]$ and $q_r[k,n]$:
     \begin{equation*}
             \begin{matrix}
@@ -156,8 +156,8 @@
         \overline{q}_r [k,n] = \frac{q_r[k,n]}{\epsilon_T} 
     \end{equation*}
     The proposed model receives the quaternion ambisonic recording, from which it extracts the spectrogram in terms of magnitude and phase
-    components using a Hamming window of lengthvM, an overlap of 50\%, and considering only the $\frac{M}{2}$ positive frequencies without the 
-    zeroth bin. herefore, from the two quaternion inputs, we obtain afeature sequence of T frames, with an overall dimension of $Tx\frac{M}{2}x8$.
+    components using a Hamming window of length M, an overlap of 50\%, and considering only the $\frac{M}{2}$ positive frequencies without the 
+    zeroth bin. herefore, from the two quaternion inputs, we obtain a feature sequence of T frames, with an overall dimension of $Tx\frac{M}{2}x8$.
     % What are quaternions, and their connection with 3D audio recorded with Ambisonic.
     % Enter the mathematical formula on the composition (that of the real part + imaginary part).
     % A minimum of considerations on active and reactive intensity, in particular
@@ -186,7 +186,7 @@
     \\ Hamilton product allows quaternion neural networks to capture internal latent relations within the features of a quaternion.
     \\ After it is applied the Batch Normalization, a technique for improving the speed, performance, and stability of artificial 
     neural networks. It is used to normalize the input layer by adjusting and scaling the activations.
-    Also, batch normalization allows each layer of a network to learn by itself a little bit more independently of other layers.
+    Also, batch normalization allows each layer of a network to learn by itself a bit more independently of other layers.
     \\ The second phase concerns the choice of the activation function, which in the case of the three quaternion convolutional layer 
     is the ReLU.\footnote{ReLU stands for rectified linear unit, and is a type of activation function. Mathematically, it is defined 
     as $y = \max(0, x)$ where y is the output and x is the input.}
@@ -207,7 +207,7 @@
     \\ The network also uses the Dropout technique, which consists in randomly removing network units with some probability $\beta$.
     \\ \\ QRNN are recurring neural networks based on quaternions.
     The peculiarity of recurrent neural networks is that they differ from feedforward nets because they include a feedback loop,
-    whereby output from step n-1 is fed back to the net to affect the outcome of step n, and so forth for each subsequent step.
+    whereby output from step n-1 is fed back to the net to affect the outcome of step n, and so forth for each next step.
     \\ In these QRNN Q nodes of quaternion gated recurrent units (QGRU) are used in each layer and as a function of activation
     a hyperbolic tangent (tanh).
     \\ \\ The output of the recurrent layer is shared between two fully-connected layer branches each producing the SED as 
@@ -219,7 +219,7 @@
         \label{fig:dqnn}
     \end{figure}
     \subsection{Weight Initialization}
-    The appropriate and correct initialization of the network parameters in the quaternion domain must take into account the
+    The proper initialization of the network parameters in the quaternion domain must take into account the
     interactions between quaternion-valued components,  thus a simple random and component-wise initialization may result in an 
     unsuitable choice. 
     \\ A possible solution maybe derived by considering a normalized purely quaternion  $u^\triangleleft$ generated for each weight w 
@@ -262,7 +262,7 @@
     Additionally, half the number of record- ings have up to two temporally overlapping sound events, and the remaining have no overlapping.\\
     Finally, to create a realistic sound scene recording, natural ambient noise collected in the IR recording locations was added to the synthesized recordings such that the average SNR of the sound events was 30 dB.\\
     The only explicit difference between each of the development dataset splits and eval- uation dataset is the isolated sound event examples employed.\\
-    The dataset consists of eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, keysDrop,  speech, keyboard, pageturn, cough, doorslam and laughter.\\
+    \\ The dataset has eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, keysDrop,  speech, keyboard, pageturn, cough, doorslam and laughter.\\
     The dataset contains 250 audio files, randomly divided into five splits in a way that in each split there is an equal number of examples for each class: we used the first four for training the network, while the remaining one is used for testing (20\%).
     \\ \\ We wrote a Python script in order to divide the dataset in the right way. The script automatically divides the samples and creates the directories that the the program expects to receive.
     \\ The main division is about the number of overlaps, we have samples with two and one overlap. For each one of these subsets we have two directories: one with the file audio (in wav format) and the other for the labels (in csv format). The dataset results to be divided in 4 directories. 
@@ -280,16 +280,16 @@
     \subsection*{First Experiment}
     In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, in particular we changed the number of filters in the Quaternion convolutional layers, in order to discover what is the behavior of the network and its results with respect to the different parameters.\\
     To this end, we set a number of P = 32 filters in the QCNN layers of the first models, and P = 16 filters for the second ones, analyzing the results on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
-    This led to a huge difference in the number of parameters of the models: in the model with P = 16 filters there are more or less 270k trainable parameters, in the model with P = 32 there are about 425k parameters.\\
+    This led to a huge difference in the number of parameters of the models: in the model with P = 16 filters there are about 270k trainable parameters, in the model with P = 32 there are about 425k parameters.\\
     We left unchanged all the other parameters: sequence length of T = 512 frames, window length M = 512, batch size of 10, Q = 128 nodes for the recurrent networks and R = 32 nodes for the fully connected layers.
     \subsection*{Second Experiment}
     In our second experiment, we compare the proposed quaternion CRNN with the traditional approach used in this kind of problems (a SELDnet architecture based on normal convolutional layer): we found a project developed by a group of researches\footnote{ Sharath Adavanne, Archontis Politis, and Tuomas Virtanen. Github account: https://github.com/sharathadavanne/seld-dcase2019} and we trained both networks on the same dataset (TAU Spatial Sound Events 2019 - Ambisonic), distinguishing one and two overlaps with the aim of studying the results.\\
     \\
-    We had to make some changes on the new network in order to adapt it to our needs. For example we couldn't extract the features in the same way of the QCRNN because the new network expects different inputs: while our network expects inputs in a Quaternion form, the traditional model expects as input some Fourier transformed values. For this reason, we had to run two different scripts for extracting the features in the two different ways. \\
-    Another thing to do was to split the dataset in the same way we did before, in order to train the models on the same sets of audio files.\\
+    We had to make some changes on the new network to adapt it to our needs. For example we couldn't extract the features in the same way of the QCRNN because the new network expects different inputs: while our network expects inputs in a Quaternion form, the traditional model expects as input some Fourier transformed values. For this reason, we had to run two different scripts for extracting the features in the two different ways. \\
+    Another thing to do was to split the dataset in the same way we did before, to train the models on the same sets of audio files.\\
 	For the rest we have left unchanged the default parameters set by the developers in their work with the Seld-net (T = 128, M = 2048, C = 4, P = 64, MP1 = MP2 = 8, MP3 = 4, Q = R = 128, N = 11).\\
 	\\
-	In order to provide a fair comparison, we have choosen a configuration such to have a comparable number of parameters for both the models. In particular, we used the winning configuration of our first experiment (P = 32 filters), in order to have about 425k parameters for the proposed quaternion network and about 461k parameters for the SELDnet, so the number of parameters is very similar and in this way the results are comparable. \\
+	To provide a fair comparison, we have choosen a configuration such to have a comparable number of parameters for both the models. In particular, we used the winning configuration of our first experiment (P = 32 filters), in order to have about 425k parameters for the proposed quaternion network and about 461k parameters for the SELDnet, so the number of parameters is very similar and in this way the results are comparable. \\
     \section{Results}
 	\subsection*{QCRNN with 32 filters in the Quaternion Convolutional layers}
 	The results made using the neural network set with 32 filters in the convolutional layer are shown.
@@ -309,7 +309,7 @@
 		\caption{$S_{SELD}$ evolution computed on the test set during the training}
 	\end{figure}
 	%\FloatBarrier
-	\\ \\ \\ We can see what we have achieved with the same network on both the two overlaps (ov1 and ov2). The red line refers to the 32 filter network trained on the samples with 2 overlaps (ov2), while the light blue line refers to the same network trained on samples with a single sound overlap (ov1). Indeed, what can be seen from the graphs above is that the network performs better with samples with a single overlap than that with two overlaps. This is because the second overlap makes the sound less clear and more difficult to locate and reveal.
+	\\ \\ \\ We can see what we have achieved with the same network on both the two overlaps (ov1 and ov2). The red line refers to the 32 filter network trained on the samples with 2 overlaps (ov2), while the light blue line refers to the same network trained on samples with a single sound overlap (ov1). Indeed, what can be seen from the graphs above is that the network performs better with samples with a single overlap than that with two overlaps. This is because the second overlap makes the sound less clear and more difficult to find and show.
 	\\ In both cases the $S_{SED}$ score, $S_{DOA}$ score and $S_{SELD}$ score drop as the epoch increases, this means that the network continuously improves the results in order to obtain more and more better performances.
 	\begin{table}[h!]
 		\centering
@@ -511,5 +511,5 @@ Also in this way, we can see that the best results of our experiments are reache
     \\ 
     Finally we thought it could be interesting to compare the results obtained with a SELDnet architecture based on normal convolutional layer.\\
     We set the parameters of the various models so that we find ourselves in similar situations that we can compare.\\
-    Overall, as we expected, results have proved that the use of quaternion-valued acoustic intensity vector as input features leads to an improvement of 3D SELD performance in challenging environments compared to .\\
+    Overall, as we expected, results have proved that the use of quaternion-valued acoustic intensity vector as input features leads to an improvement of 3D SELD performance in challenging environments compared to.\\
 \end{document}
