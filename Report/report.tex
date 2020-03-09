@@ -469,26 +469,9 @@
 			\end{tabular} \\
 		\end{tabular}
 		\caption{The best results on the TAU Dataset in terms of the SED score, DOA score and SELD score considering several experiments. We considered the values referred to the best epoch for each model.}
-<<<<<<< HEAD
 	\end{table}	
-    \section{Conclusion}
-    In this work, we propose a quaternion-valued deep neural network for the localization of 3D sound events recorded by first-order Ambisonics.\\
-    The proposed network involves the convolution process, as well as the rest of the processing, in the quaternion domain, thus resulting in improved performance and reduced number of parameters. The proposed method involves quaternion-valued acoustic intensity vectors as input features, which provide a more accurate DOA estimation.\\
-    The method is assessed on the FOA dataset (TAU Spatial Sound Events 2019 - Ambisonic), that involves up to 2 overlapping sound events to be localized.\\
-    \\
-    Fixed the parameter P = 32 filters, we analyze the different results considering sounds with one or two overlaps.\\
-    Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one overlap (in splits ov2, the scores are slightly higher). In fact, having two different sound sources in the same time instant makes the problem of detecting and localizing the sources a lot more complex to solve for the network.\\
-    \\
-    Then we compared the QCNN with P = 32 filters and P = 16 filters.\\
-    The reduction of the number of parameters results in poor performance in the proposed method, infact, we discovered that the network with P = 32 filters in the QCNN layers performs slightly better than the model with only 16 filters.\\
-    \\ 
-    Finally we thought it could be interesting to compare the results obtained with a SELDnet architecture based on normal convolutional layer.\\
-    We set the parameters of the various models so that we find ourselves in similar situations that we can compare.\\
-    Overall, as we expected, results have proved that the use of quaternion-valued acoustic intensity vector as input features leads to an improvement of 3D SELD performance in challenging environments compared to .\\
-=======
-\end{table}
 \FloatBarrier
-In the sequent plots are represented the confidence intervals for the prediction on the localization of the sound source (\textit{x} and \textit{y} coordinates) for each network tested on the different overlap.\\
+In the sequent plots are represented the confidence intervals for the prediction on the localization of the sound source (\textit{x} and \textit{y} coordinates) for each network tested on the different overlap.
 \FloatBarrier
 \begin{figure}[hbt!]
 		\centering
@@ -497,7 +480,7 @@ In the sequent plots are represented the confidence intervals for the prediction
 	\begin{figure}[hbt!]
 		\centering
 		\includegraphics[width=0.6\textwidth]{images/ov2_conf.png} 
-	\end{figure}
+\end{figure}
 
 The confidence intervals of the classification error rate computed with 95\% of confidence are reported in the sequent table.\\
 \FloatBarrier
@@ -514,10 +497,19 @@ O2 & $0.7541\sim 0.7574$& $\textbf{0.7512}\sim \textbf{0.7545}$& $0.7917\sim 0.7
 \FloatBarrier
 Also in this way, we can see that the best results of our experiments are reached with the QCRNN Net with 32 filters.
 
-
-\section{Conclusion}
-    Confronto tra i risultati ottenuti dall'esperimenti di 32. In particolare le differenze tra i due overlap (ov1 e ov2). 
-    \\ Confronto tra i risultati di 16 con quelli da 32, in particolare tra i due overlap (cioè i ov1 separati da ov2). Inoltre, evidenziare che con 32 si ottengono risultati migliori. Spiegazione del perchè 32 è meglio.
-    \\ Analisi complessiva delle diffenze dell'andamento della rete dei quaternioni con quella normale (CNN). In particolare, sottolineando che quella dei quaternioni risulta essere migliore e perchè.
->>>>>>> b1f1bbd77319af9e1d6d6ac631cf7b5533b2deee
+    
+    \section{Conclusion}
+    In this work, we propose a quaternion-valued deep neural network for the localization of 3D sound events recorded by first-order Ambisonics.\\
+    The proposed network involves the convolution process, as well as the rest of the processing, in the quaternion domain, thus resulting in improved performance and reduced number of parameters. The proposed method involves quaternion-valued acoustic intensity vectors as input features, which provide a more accurate DOA estimation.\\
+    The method is assessed on the FOA dataset (TAU Spatial Sound Events 2019 - Ambisonic), that involves up to 2 overlapping sound events to be localized.\\
+    \\
+    Fixed the parameter P = 32 filters, we analyze the different results considering sounds with one or two overlaps.\\
+    Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one overlap (in splits ov2, the scores are slightly higher). In fact, having two different sound sources in the same time instant makes the problem of detecting and localizing the sources a lot more complex to solve for the network.\\
+    \\
+    Then we compared the QCNN with P = 32 filters and P = 16 filters.\\
+    The reduction of the number of parameters results in poor performance in the proposed method, infact, we discovered that the network with P = 32 filters in the QCNN layers performs slightly better than the model with only 16 filters.\\
+    \\ 
+    Finally we thought it could be interesting to compare the results obtained with a SELDnet architecture based on normal convolutional layer.\\
+    We set the parameters of the various models so that we find ourselves in similar situations that we can compare.\\
+    Overall, as we expected, results have proved that the use of quaternion-valued acoustic intensity vector as input features leads to an improvement of 3D SELD performance in challenging environments compared to .\\
 \end{document}
