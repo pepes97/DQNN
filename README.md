@@ -29,7 +29,7 @@ Download the dataset. This script downloads the TAU-Dataset and unzips the folde
 python3 download_dataset.py
 ```
 
-The sequent script prepare the folders as the program expects to receive them. It renames all the entries of the dataset according to the development set and evaluation set, and divides them according to the number of overlapping (ov1 and ov2). It creates two main folders with the same content (**TAU Dataset** and **TAU Dataset Seld**), these will be use later to extract the features for the two different nets.
+The sequent script prepare the folders as the program expects to receive them. It renames all the entries of the dataset according to the development set and evaluation set, and divides them according to the number of overlapping (ov1 and ov2). It creates two main folders with the same content (**TAU Dataset** and **TAU Dataset Seld**), these will be used later to extract the features for the two different nets.
 ```bash
 python3 prepare_dataset.py
 ```
