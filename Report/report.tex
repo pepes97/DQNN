@@ -528,7 +528,12 @@
             \centering
             \includegraphics[width=0.6\textwidth]{images/ov2_conf.png} 
     \end{figure}
-    The confidence intervals of the classification error rate computed with 95\% of confidence are reported in the sequent table.\\
+    
+    To compute the confidence intervals for the classification task we used the traditional formula.
+    \[interval = z \cdot \sqrt{\frac{(metric)\cdot (1-metric)}{n}} \]
+    \[conf\_ interval = metric \pm interval \]
+    where, $z$ depends on the confidence rate and $n$ is the number of samples.\\
+    We computed the confidence intervals using the classification \textbf{error rate} as our metric. The intervals computed with 95\% of confidence are reported in the sequent table.\\
     \FloatBarrier
     \begin{table}[h!]
     \centering
