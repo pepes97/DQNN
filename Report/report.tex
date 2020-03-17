@@ -53,11 +53,9 @@
     \section{Quaternion domain}
     3D audio files are sampled using the Ambisonics technique, where sampling is based on the decomposition of sound in a linear 
     combination of orthogonal bases of spherical harmonics.
-    \\ In this project the first-order Ambisonics (FOA) was considered, which is composed of 4 microphone capsules. The first is
-    a pressure microphone, the other three are orthogonal eight-shaped microphones related to the pressure gradient, or the acoustic
+    \\ In this project, the first-order Ambisonics (FOA) was considered, which is composed of 4 microphone capsules. The first one is a pressure microphone and the other three are orthogonal eight-shaped microphones related to the pressure gradient, or the acoustic
     speed.
-    \\ The pressure microphone is an omnidirectional microphone that has unity gain in all directions. It is indicated by the letter W 
-    and corresponds to the spherical harmonic function of order 0.
+    \\ The pressure microphone is an omnidirectional microphone that has unity gain in all directions. It is usually denoted with W and corresponds to the spherical harmonic function of order 0. \\
     Instead, the other three microphones are denoted with X, Y, Z and correspond to the harmonic functions of order 1.
     \\ Our goal is to use spherical harmonics in the quaternion domain, so let's consider four ambisonic signals, namely $x_W[n]$, 
     $x_X[n]$, $x_Y[n]$ e $x_Z[n]$, as a single quaternion signal:
@@ -167,14 +165,14 @@
     % the role of active and reactive intensity in DOA.
     % \\ Formulas of the two "input features" with quaternions.
     \section{Network Structure}
-    The model receives as input the quaternions, from which it extracts the spectrogram in terms of magnitude and phase components 
+    Quaternion-valued input features are passed to the network, from which it extracts the spectrogram in terms of magnitude and phase components 
     using a Hamming window.
     \\ The network is a Quaternion Convolutional Recurrent Neural Network (QCRNN).
     In particular, we have three convolutional layers based on quaternions (QCNN), two recurrent layers (QRNN) and finally two parallel 
     \\ outputs, both are composed of two fully-connected layers, which obviously differ in their activation functions and size that 
     receive input from previous layers.
-    \\ The QCNN are composed of P filter kernels with size $3x3x8$. 
-    \\ The three convolutional networks (QCNN) consist of 3 stages: Convolutional, Detector and  Pooling.
+    \\ The QCNNs are composed of P filter kernels with size $3x3x8$. 
+    \\ The three convolutional layers (QCNN) consist of 3 stages: Convolutional, Detector and  Pooling.
     \\ The first stage consists of the convolutional process to the inputs. Since these are quaternions, the convolutional process 
     consists of Hamilton's product:
     \begin{equation*}
@@ -187,7 +185,7 @@
     \end{equation*}
     where x is the vector of the quaternions taken as input and W a generic quaternion filter matrix.
     \\ Hamilton product allows quaternion neural networks to capture internal latent relations within the features of a quaternion.
-    \\ After it is applied the Batch Normalization, a technique for improving the speed, performance, and stability of artificial 
+    \\ After it is applied the Batch Normalization, a technique for improving the speed, the performance  and the stability of artificial 
     neural networks. It is used to normalize the input layer by adjusting and scaling the activations.
     Also, batch normalization allows each layer of a network to learn by itself a bit more independently of other layers.
     \\ The second phase concerns the choice of the activation function, which in the case of the three quaternion convolutional layer 
@@ -266,7 +264,7 @@
     The recordings on the dataset consist of stationary point sources from multiple sound classes each associated with a temporal 
     onset and offset time, and DOA coordinate represented using azimuth and elevation angle.\\
     \\ The dataset consists of a development and evaluation set.  The development set consists of 400, one minute long recordings 
-    sampled at 48000 Hz, divided into four cross-validation splits of 100 recordings each. The evaluation set consists of 100 
+    sampled at 48000 Hz, divided into four cross-validation splits of 100 recordings each. The evaluation set consists of 100, 
     one-minute long recordings.\\
     These recordings were synthesized using spatial room impulse response (IRs) collected from five indoor \\ locations, at 504 unique 
     combinations of azimuth-elevation-distance. \\
@@ -298,8 +296,13 @@
     The lower the $S_{DOA}$ score, the better the results in terms of 3D localization.
     Finally, an overall SELD score can be defined based on the previous metrics as $S_{SELD} = \dfrac{(S_{SED} + S_{DOA})}{2}$.
     \section{Experimentation}
+    The goal of this project was to train the given network on the TAU dataset and to consider the results achieved.\\
+    We did it by training the network over about 150 epochs and by collecting all relevant data.\\
+    \\
+    Once this is done, we thought it might be interesting (but above all instructive for us), to do different experiments (for example changing some parameters or even the net) in order to compare our results to those of the other experiments and to understant what is "the best" way to achieve the SELD task.\\
+    \\ 
     We did experiments using two different approaches, both by modifying the parameters and evaluating the results using a different 
-    network, and the models have been trained over 150 epochs.\\
+    network, and the models have been trained over 150 epochs on the whole dataset (not training on splits separately).\\
     After training, we computed the confidence intervals of the significant metrics for our experiments.
     \subsection*{First Experiment}
     In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, 
@@ -517,7 +520,7 @@
 		\end{tabular}
 		\caption{The best results on the TAU Dataset in terms of the SED score, DOA score and SELD score considering several experiments. We considered the values referred to the best epoch for each model.}
 	\end{table}	
-    \FloatBarrier
+ \FloatBarrier
     In the sequent plots are represented the confidence intervals for the prediction on the localization of the sound source (\textit{x} and \textit{y} coordinates) for each network tested on the different overlap.
     \FloatBarrier
     \begin{figure}[hbt!]
