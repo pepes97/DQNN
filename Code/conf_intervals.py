@@ -6,10 +6,12 @@ import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plot
-import cls_data_generator
+import cls_data_generator_seld
 import evaluation_metrics
 import keras_model
 from keras.utils import plot_model
+from numpy import median
+import matplotlib as plt
 
 import parameter
 import utils
@@ -100,7 +102,7 @@ def main(args):
     unique_name = os.path.join(model_dir, unique_name)
     print("unique_name: {}\n".format(unique_name))
 
-    data_gen_test = cls_data_generator.DataGenerator(
+    data_gen_test = cls_data_generator_seld.DataGenerator(
         dataset=params['dataset'], ov=params['overlap'], split=params['split'], db=params['db'], nfft=params['nfft'],
         batch_size=params['batch_size'], seq_len=params['sequence_length'], classifier_mode=params['mode'],
         weakness=params['weakness'], datagen_mode='test', cnn3d=params['cnn_3d'], xyz_def_zero=params['xyz_def_zero'],
@@ -189,25 +191,23 @@ def main(args):
         doa_error = doa_pred-doa_gt
 
         doa_error = np.reshape(doa_error, newshape=(doa_error.shape[0],11,2))
-        doa_error = doa_error[:, :, 0]
+        doa_error = np.absolute(doa_error[:, :, 0])
         print(f"doa_error: {doa_error.shape}")
-        print(f"doa_error: {doa_error}")
         doa_error = np.reshape(doa_error, newshape=(doa_error.shape[0]*doa_error.shape[1]))
         print(f"doa_error: {doa_error.shape}")
-        print(f"doa_error: {doa_error}")
 
-        alpha = 5.0
-        # calculate lower percentile (e.g. 2.5)
-        lower_p = alpha / 2.0
-        # retrieve observation at lower percentile
-        lower = max(0.0, np.percentile(doa_error, lower_p))
-        print('%.1fth percentile = %.3f' % (lower_p, lower))
-        # calculate upper percentile (e.g. 97.5)
-        upper_p = (100 - alpha) + (alpha / 2.0)
-        # retrieve observation at upper percentile
-        upper = min(1.0, np.percentile(doa_error, upper_p))
-        print('%.1fth percentile = %.3f' % (upper_p, upper))
+        np.save(model_name+"_x", doa_error)        
+        
+        doa_error = doa_pred-doa_gt
 
+        doa_error = np.reshape(doa_error, newshape=(doa_error.shape[0],11,2))
+        doa_error = np.absolute(doa_error[:, :, 1])
+        print(f"doa_error: {doa_error.shape}")
+        doa_error = np.reshape(doa_error, newshape=(doa_error.shape[0]*doa_error.shape[1]))
+        print(f"doa_error: {doa_error.shape}")
+
+        np.save(model_name+"_y", doa_error)
+        
         # standard deviation
         std_score[epoch_cnt] = np.std([sed_score[epoch_cnt], doa_score[epoch_cnt]])
 
