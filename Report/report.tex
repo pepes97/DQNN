@@ -42,7 +42,7 @@
     In this project, we work with 3D audio sounds captured by first-order Ambisonic microphone and these sounds are then represented 
     by spherical harmonics decomposition in the quaternion domain.
     \\ The aim of the project is to detect the temporal activities of a known set of sound event classes and to further locate them in 
-    the space using quaternion-valued data processing, in particular we focus on the sound event localization and detection (SELD). 
+    the space using quaternion-valued data processing, in particular, we focus on the sound event localization and detection (SELD). 
     \\ In order to do this, we use a given Quaternion Convolutional Neural Network with the addition of some recurrent layers (QCRNN) 
     for the joint 3D sound event localization and detection task.
     % Talk about SELD, which is made up of DOA and SED. Say what I am in a general way, don't go into too much detail, don't go too 
@@ -116,7 +116,7 @@
         I_r [k,n]= \Im \{ p^*[k,n] \cdot v[k,n]\} 
     \end{equation*}
     which corresponds to the dissipative energy transport and whose mean value is zero.
-    \\ Since the intensity vectors contain the information of theacoustical energy direction of a sound wave, the acoustic intensity
+    \\ Since the intensity vectors contain the information of the acoustical energy direction of a sound wave, the acoustic intensity
     vector can be directly used for DOA estimation, used in localization.
     \\ In theory, the sound DOA can be estimated as the opposite direction of the active intensity vector. In practice, however, 
     the estimates obtained across all time-frequency bins are inconsistent in reverberant environments.
@@ -124,8 +124,11 @@
     by sound directed by a single source, opposed to overlapping sources or reverberation. 
     \\ In this way, the active and reactive intensity vectors are both extracted from the spectrogram from each audio channel and 
     are used as separate functions.
-    \\ \\ We use both the active and reactive intensity vectors across all frequency bins in the STFT domain as input features,
-    in particular,  in order to represent the active and reactive intensity vectors we encapsulate the information in two quaternions. 
+    \\ \\ We use both the active and reactive intensity vectors across all frequency bins in the STFT\footnote{Short time Fourier
+    transform used to determine the sinusoidal frequency and phase content of local sections of a signal as it changes over time. In 
+    practice, the procedure for computing STFTs is to divide a longer time signal into shorter segments of equal length and then 
+    compute the Fourier transform separately on each shorter segment} domain as \\ input features, in particular,  in order to represent 
+    the active and reactive intensity vectors we encapsulate the information in two quaternions. 
     \\  Since we have three components for each intensity vector, we also consider one more channel related to the magnitude of the
     omnidirectional microphone signal to improve the performances of the localization task.
     \\ Input features can be expressed by the two quaternions $q_a[k,n]$ and $q_r[k,n]$:
@@ -168,7 +171,7 @@
     using a Hamming window.
     \\ The network is a Quaternion Convolutional Recurrent Neural Network (QCRNN).
     In particular, we have three convolutional layers based on quaternions (QCNN), two recurrent layers (QRNN) and finally two parallel 
-    outputs, both are composed of two fully-connected layers, which obviously differ in their activation functions and size that 
+    \\ outputs, both are composed of two fully-connected layers, which obviously differ in their activation functions and size that 
     receive input from previous layers.
     \\ The QCNN are composed of P filter kernels with size $3x3x8$. 
     \\ The three convolutional networks (QCNN) consist of 3 stages: Convolutional, Detector and  Pooling.
@@ -207,7 +210,7 @@
     \\ The network also uses the Dropout technique, which consists in randomly removing network units with some probability $\beta$.
     \\ \\ QRNN are recurring neural networks based on quaternions.
     The peculiarity of recurrent neural networks is that they differ from feedforward nets because they include a feedback loop,
-    whereby output from step n-1 is fed back to the net to affect the outcome of step n, and so forth for each next step.
+    whereby output from step n-1 is sent to the net to affect the outcome of step n, and so forth for each next step.
     \\ In these QRNN Q nodes of quaternion gated recurrent units (QGRU) are used in each layer and as a function of activation
     a hyperbolic tangent (tanh).
     \\ \\ The output of the recurrent layer is shared between two fully-connected layer branches each producing the SED as 
@@ -238,8 +241,11 @@
         \end{cases}
     \end{equation*}
     where $\theta$ is randomly generated in the range $[-\pi, \pi]$ and $\phi$ is a randomly generated variable related to the variance
-    of the quaternion weight, defined as var(W) = $E\{|W|\} - (E\{|W|\})^2 $. where  the second term is null due to the symmetric distribution
-    of the weight around 0. Since W follows a Chi distribution with four degrees of freedom, the variance can be expressed as:
+    of the quaternion weight, defined as var(W) = $E\{|W|\} - (E\{|W|\})^2 $. where  the second term is null due to the symmetric 
+    distribution of the weight around 0. Since W follows a Chi distribution\footnote{Chi distribution is a continuous probability 
+    distribution. It is the distribution of the positive square root of the sum of squares of a set of independent random variables 
+    each following a standard normal distribution, or equivalently, the distribution of the Euclidean distance of the random variables 
+    from the origin.} with four degrees of freedom, the variance can be expressed as:
     \begin{equation*}
         var(W)=E\{|W|^2\}= \int_0^\infty w^2f(w) dw = 4 \sigma^2
     \end{equation*}
@@ -255,62 +261,102 @@
     % \\I would put image of the network.
     % \\We can also specify the dimensions of the fetures after the QCNN, the QRNN and the FC.
     \section{Dataset}
-    We evaluate the proposed method involving the QCRNN on a datatset, TAU Spatial Sound Events 2019 - Ambisonic, providing four-channel First-Order Ambisonic (FOA) recordings.\\
-    The recordings on the dataset consist of stationary point sources from multiple sound classes each associated with a temporal onset and offset time, and DOA coordinate represented using azimuth and elevation angle.\\
-    \\ The dataset consists of a development and evaluation set.  The development set consists of 400, one minute long recordings sampled at 48000 Hz, divided into four cross-validation splits of 100 recordings each. The evaluation set consists of 100 one-minute long recordings.\\
-    These recordings were synthesized using spatial room impulse response (IRs) collected from five indoor locations, at 504 unique combinations of azimuth-elevation-distance. \\
-    Additionally, half the number of record- ings have up to two temporally overlapping sound events, and the remaining have no overlapping.\\
-    Finally, to create a realistic sound scene recording, natural ambient noise collected in the IR recording locations was added to the synthesized recordings such that the average SNR of the sound events was 30 dB.\\
-    The only explicit difference between each of the development dataset splits and eval- uation dataset is the isolated sound event examples employed.\\
-    \\ The dataset has eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, keysDrop,  speech, keyboard, pageturn, cough, doorslam and laughter.\\
-    The dataset contains 250 audio files, randomly divided into five splits in a way that in each split there is an equal number of examples for each class: we used the first four for training the network, while the remaining one is used for testing (20\%).
-    \\ \\ We wrote a Python script in order to divide the dataset in the right way. The script automatically divides the samples and creates the directories that the the program expects to receive.
-    \\ The main division is about the number of overlaps, we have samples with two and one overlap. For each one of these subsets we have two directories: one with the file audio (in wav format) and the other for the labels (in csv format). The dataset results to be divided in 4 directories. 
+    We evaluate the proposed method involving the QCRNN on a datatset, TAU Spatial Sound Events 2019 - Ambisonic, providing 
+    four-channel First-Order Ambisonic (FOA) recordings.\\
+    The recordings on the dataset consist of stationary point sources from multiple sound classes each associated with a temporal 
+    onset and offset time, and DOA coordinate represented using azimuth and elevation angle.\\
+    \\ The dataset consists of a development and evaluation set.  The development set consists of 400, one minute long recordings 
+    sampled at 48000 Hz, divided into four cross-validation splits of 100 recordings each. The evaluation set consists of 100 
+    one-minute long recordings.\\
+    These recordings were synthesized using spatial room impulse response (IRs) collected from five indoor \\ locations, at 504 unique 
+    combinations of azimuth-elevation-distance. \\
+    Additionally, half the number of recordings have up to two temporally overlapping sound events, and the \\remaining have no 
+    overlapping.\\
+    Finally, to create a realistic sound scene recording, natural ambient noise collected in the IR recording locations was added 
+    to the synthesized recordings such that the average SNR of the sound events was 30 dB.\\
+    The only explicit difference between each of the development dataset splits and evaluation dataset is the isolated sound event 
+    examples employed.\\
+    \\ The dataset has eleven sound event classes, each with 20 examples: knock, drawer, clearthroat, phone, \\ keysDrop, speech, 
+    keyboard, pageturn, cough, doorslam and laughter.\\
+    The dataset contains 250 audio files, randomly divided into five splits in a way that in each split there is an equal number 
+    of examples for each class: we used the first four for training the network, while the remaining one is used for testing (20\%).
+    \\ \\ We wrote a Python script in order to divide the dataset in the right way. The script automatically divides the samples 
+    and creates the directories that the the program expects to receive.
+    \\ The main division is about the number of overlaps, we have samples with two and one overlap. For each one of these subsets we 
+    have two directories: one with the file audio (in wav format) and the other for the labels (in csv format). The dataset results 
+    to be divided in 4 directories. 
     \section{Metrics}
     The SELD task can use individual SED and localization (DOA) metrics.
-    \\ \\ For the SED task, we use the polyphonic SED metrics that are the F-score (ideally F = 1), based on the number of true and false positives, and the error rate (ER) (ideally ER = 0), based on the total number of active sound event classes in the ground truth.\\
+    \\ \\ For the SED task, we use the polyphonic SED metrics that are the F-score (ideally F = 1), based on the number of true and 
+    false positives, and the error rate (ER) (ideally ER = 0), based on the total number of active sound event classes in the ground 
+    truth.\\
     A joint SED score can be considered as $S_{SED} = \dfrac{(ER+(1-F))}{2}$.
-    \\ \\ On the other hand, in order to measure the performance of the localization task, a DOA estimation error DOA$_{err}$ can be used as evaluation metric, based on estimated and ground truth DOAs.\\ Moreover, a frame recall metric K (ideally K = 1) can be used based on the percentage of true positives. \\
+    \\ \\ On the other hand, in order to measure the performance of the localization task, a DOA estimation error DOA$_{err}$ can be 
+    used as evaluation metric, based on estimated and ground truth DOAs.\\ Moreover, a frame recall metric K (ideally K = 1) can be 
+    used based on the percentage of true positives. \\
     A joint DOA score can be defined as $S_{DOA} = \dfrac{(DOA_{err}/180 + (1 - K))}{2}$.\\
     The lower the $S_{DOA}$ score, the better the results in terms of 3D localization.
     Finally, an overall SELD score can be defined based on the previous metrics as $S_{SELD} = \dfrac{(S_{SED} + S_{DOA})}{2}$.
     \section{Experimentation}
-    We did experiments using two different approaches, both by modifying the parameters and evaluating the results using a different network, and the models have been trained over 150 epochs.\\
-    **After training, we computed confidence interval for each model that we created.**
+    We did experiments using two different approaches, both by modifying the parameters and evaluating the results using a different 
+    network, and the models have been trained over 150 epochs.\\
+    After training, we computed the confidence intervals of the significant metrics for our experiments.
     \subsection*{First Experiment}
-    In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, in particular we changed the number of filters in the Quaternion convolutional layers, in order to discover what is the behavior of the network and its results with respect to the different parameters.\\
-    To this end, we set a number of P = 32 filters in the QCNN layers of the first models, and P = 16 filters for the second ones, analyzing the results on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
-    This led to a huge difference in the number of parameters of the models: in the model with P = 16 filters there are about 270k trainable parameters, in the model with P = 32 there are about 425k parameters.\\
-    We left unchanged all the other parameters: sequence length of T = 512 frames, window length M = 512, batch size of 10, Q = 128 nodes for the recurrent networks and R = 32 nodes for the fully connected layers.
+    In the first case we trained the Quaternion based neural network with two different values for the hyperparameter of the network, 
+    in particular, we changed the number of filters in the Quaternion convolutional layers, in order to discover what is the behavior 
+    of the network and its results with respect to the different parameters.\\
+    To this end, we set a number of P = 32 filters in the QCNN layers of the first models, and P = 16 filters for the second ones, 
+    analyzing the results on both the datasets (with one overlap (\textbf{ov1}) and two overlaps (\textbf{ov2})).\\
+    This led to a huge difference in the number of parameters of the models: in the model with P = 16 filters there are about 270k 
+    trainable parameters, in the model with P = 32 there are about 425k parameters.\\
+    We left unchanged all the other parameters: sequence length of T = 512 frames, window length M = 512, batch size of 10, Q = 128 
+    nodes for the recurrent networks and R = 32 nodes for the fully connected layers.
     \subsection*{Second Experiment}
-    In our second experiment, we compare the proposed quaternion CRNN with the traditional approach used in this kind of problems (a SELDnet architecture based on normal convolutional layer): we found a project developed by a group of researches\footnote{ Sharath Adavanne, Archontis Politis, and Tuomas Virtanen. Github account: https://github.com/sharathadavanne/seld-dcase2019} and we trained both networks on the same dataset (TAU Spatial Sound Events 2019 - Ambisonic), distinguishing one and two overlaps with the aim of studying the results.\\
+    In our second experiment, we compare the proposed quaternion QCRNN with the traditional approach used in this kind of problems 
+    (a SELDnet architecture based on normal convolutional layer): we found a project developed by a group of researches\footnote{
+        Sharath Adavanne, Archontis Politis, and Tuomas Virtanen. \\Github account: https://github.com/sharathadavanne/seld-dcase2019} 
+        and we trained both networks on the same dataset (TAU Spatial Sound Events 2019 - Ambisonic), distinguishing one and two 
+        overlaps with the aim of studying the results.\\
     \\
-    We had to make some changes on the new network to adapt it to our needs. For example we couldn't extract the features in the same way of the QCRNN because the new network expects different inputs: while our network expects inputs in a Quaternion form, the traditional model expects as input some Fourier transformed values. For this reason, we had to run two different scripts for extracting the features in the two different ways. \\
+    We had to make some changes on the new network to adapt it to our needs. For example we couldn't \\extract the features in the same
+     way of the QCRNN because the new network expects different inputs: while our network expects inputs in a Quaternion form, the 
+     traditional model expects as input some Fourier transformed values. For this reason, we had to run two different scripts for 
+     extracting the features in the two different ways. \\
     Another thing to do was to split the dataset in the same way we did before, to train the models on the same sets of audio files.\\
-	For the rest we have left unchanged the default parameters set by the developers in their work with the Seld-net (T = 128, M = 2048, C = 4, P = 64, MP1 = MP2 = 8, MP3 = 4, Q = R = 128, N = 11).\\
+    For the rest we have left unchanged the default parameters set by the developers in their work with the Seld-net (T = 128, M = 
+    2048, C = 4, P = 64, MP1 = MP2 = 8, MP3 = 4, Q = R = 128, N = 11).\\
 	\\
-	To provide a fair comparison, we have choosen a configuration such to have a comparable number of parameters for both the models. In particular, we used the winning configuration of our first experiment (P = 32 filters), in order to have about 425k parameters for the proposed quaternion network and about 461k parameters for the SELDnet, so the number of parameters is very similar and in this way the results are comparable. \\
+    To provide a fair comparison, we have choosen a configuration such to have a comparable number of parameters for both the models.
+    In particular, we used the winning configuration of our first experiment (P = 32 filters), in order to have about 425k parameters 
+    for the proposed quaternion network and about 461k parameters for the SELDnet, so the number of parameters is very similar and in 
+    this way the results are comparable.
     \section{Results}
 	\subsection*{QCRNN with 32 filters in the Quaternion Convolutional layers}
 	The results made using the neural network set with 32 filters in the convolutional layer are shown.
 	\begin{figure}[hbt!]
 		\centering
-		\includegraphics[height=0.34\textwidth]{images/sed_score.png} \\
+		\includegraphics[height=0.29\textwidth]{images/sed_score.png} \\
 		\caption{$S_{SED}$ evolution computed on the test set during the training}
 	\end{figure}
 	\begin{figure}[hbt!]
 		\centering
-		\includegraphics[height=0.34\textwidth]{images/doa_score.png} \\
+		\includegraphics[height=0.29\textwidth]{images/doa_score.png} \\
 		\caption{$S_{DOA}$ evolution computed on the test set during the training}
 	\end{figure}
 	\begin{figure}[hbt!]
 		\centering
-		\includegraphics[height=0.34\textwidth]{images/seld_score.png}\\
+		\includegraphics[height=0.29\textwidth]{images/seld_score.png}\\
 		\caption{$S_{SELD}$ evolution computed on the test set during the training}
 	\end{figure}
 	%\FloatBarrier
-	\\ \\ \\ We can see what we have achieved with the same network on both the two overlaps (ov1 and ov2). The red line refers to the 32 filter network trained on the samples with 2 overlaps (ov2), while the light blue line refers to the same network trained on samples with a single sound overlap (ov1). Indeed, what can be seen from the graphs above is that the network performs better with samples with a single overlap than that with two overlaps. This is because the second overlap makes the sound less clear and more difficult to find and show.
-	\\ In both cases the $S_{SED}$ score, $S_{DOA}$ score and $S_{SELD}$ score drop as the epoch increases, this means that the network continuously improves the results in order to obtain more and more better performances.
+    \\ \\ We can see what we have achieved with the same network on both the two overlaps (ov1 and ov2). 
+    \\ The red line refers to the 32 filter network trained on the samples with 2 overlaps (ov2), while the light blue line refers to
+    the same network trained on samples with a single sound overlap (ov1). 
+    \\ \\ Indeed, what can be seen from the graphs above is that the 
+    network performs better with samples with a single overlap than that with two overlaps. This is because the second overlap makes 
+    the sound less clear and more difficult to find and show.
+    \\ \\ In both cases the $S_{SED}$ score, $S_{DOA}$ score and $S_{SELD}$ score drop as the epoch increases, this means that the 
+    network continuously improves the results in order to obtain more and more better performances. \\
 	\begin{table}[h!]
 		\centering
 		\begin{tabular}{c|c}
@@ -344,10 +390,12 @@
 				0.3646 \\
 				0.6941 \\
 				0.459 \\
-				0.5766
+				0.5766 
 			\end{tabular}
 		\end{tabular}
-		\caption{The best results of the network on the TAU Dataset in terms of the SED score, DOA score and SELD score considering neural network with 32 filters in the quaternion convolutional layers. In the case of ov1 we obtained the best values in epoch 156, instead for ov2 in epoch 133.}
+        \caption{The best results of the network on the TAU Dataset in terms of the SED score, DOA score and SELD score considering 
+        neural network with 32 filters in the quaternion convolutional layers. \\ In the case of ov1 we obtained the best values in 
+        epoch 156, instead for ov2 in epoch 133.}
 	\end{table}
     \subsection*{Experiments carried out: QCRNN 16, QCRNN 32 and CNN}
     \paragraph{}
@@ -403,8 +451,7 @@
 	  (c) {\color{myred} \textbf{red}}: Traditional Seld-net CRNN approach with default parameters;\\
 	\end{minipage}
 	\end{figure} 
-\FloatBarrier
-	
+    \FloatBarrier
 	\begin{table}[h!]
 		\centering
 		\begin{tabular}{c|c|c|c}
@@ -470,46 +517,53 @@
 		\end{tabular}
 		\caption{The best results on the TAU Dataset in terms of the SED score, DOA score and SELD score considering several experiments. We considered the values referred to the best epoch for each model.}
 	\end{table}	
-\FloatBarrier
-In the sequent plots are represented the confidence intervals for the prediction on the localization of the sound source (\textit{x} and \textit{y} coordinates) for each network tested on the different overlap.
-\FloatBarrier
-\begin{figure}[hbt!]
-		\centering
-		\includegraphics[width=0.6\textwidth]{images/ov1_conf.png} 
-	\end{figure}
-	\begin{figure}[hbt!]
-		\centering
-		\includegraphics[width=0.6\textwidth]{images/ov2_conf.png} 
-\end{figure}
-
-The confidence intervals of the classification error rate computed with 95\% of confidence are reported in the sequent table.\\
-\FloatBarrier
-\begin{table}[h!]
-\centering
-\begin{tabular}{c|c|c|c}
-& QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
-\hline
-O1 & $0.6610\sim 0.6647$ & $\textbf{0.6162}\sim \textbf{0.6199}$ & $0.7799\sim 0.7831$\\
-\hline
-O2 & $0.7541\sim 0.7574$& $\textbf{0.7512}\sim \textbf{0.7545}$& $0.7917\sim 0.7948$\\
-\end{tabular}
-\end{table}
-\FloatBarrier
-Also in this way, we can see that the best results of our experiments are reached with the QCRNN Net with 32 filters.
-
-    
-    \section{Conclusion}
-    In this work, we propose a quaternion-valued deep neural network for the localization of 3D sound events recorded by first-order Ambisonics.\\
-    The proposed network involves the convolution process, as well as the rest of the processing, in the quaternion domain, thus resulting in improved performance and reduced number of parameters. The proposed method involves quaternion-valued acoustic intensity vectors as input features, which provide a more accurate DOA estimation.\\
-    The method is assessed on the FOA dataset (TAU Spatial Sound Events 2019 - Ambisonic), that involves up to 2 overlapping sound events to be localized.\\
+    \FloatBarrier
+    In the sequent plots are represented the confidence intervals for the prediction on the localization of the sound source (\textit{x} and \textit{y} coordinates) for each network tested on the different overlap.
+    \FloatBarrier
+    \begin{figure}[hbt!]
+            \centering
+            \includegraphics[width=0.6\textwidth]{images/ov1_conf.png} 
+        \end{figure}
+        \begin{figure}[hbt!]
+            \centering
+            \includegraphics[width=0.6\textwidth]{images/ov2_conf.png} 
+    \end{figure}
+    The confidence intervals of the classification error rate computed with 95\% of confidence are reported in the sequent table.\\
+    \FloatBarrier
+    \begin{table}[h!]
+    \centering
+    \begin{tabular}{c|c|c|c}
+    & QCRNN 16 & QCRNN 32 & CNN-SELDnet \\
+    \hline
+    O1 & $0.6610\sim 0.6647$ & $\textbf{0.6162}\sim \textbf{0.6199}$ & $0.7799\sim 0.7831$\\
+    \hline
+    O2 & $0.7541\sim 0.7574$& $\textbf{0.7512}\sim \textbf{0.7545}$& $0.7917\sim 0.7948$\\
+    \end{tabular}
+    \end{table}
+    \FloatBarrier
+    Also in this way, we can see that the best results of our experiments are reached with the QCRNN Net with 32 filters.
+\section{Conclusion}
+    In this work, we propose a quaternion-valued deep neural network for the localization of 3D sound events recorded by first-order 
+    Ambisonics.\\
+    The proposed network involves the convolution process, as well as the rest of the processing, in the quaternion domain, thus 
+    resulting in improved performance and reduced number of parameters. 
+    \\ The proposed method involves quaternion-valued acoustic intensity vectors as input features, which provide a more accurate 
+    DOA estimation.\\
+    The method is assessed on the FOA dataset (TAU Spatial Sound Events 2019 - Ambisonic), that involves up to 2 overlapping sound 
+    events to be localized.\\
     \\
     Fixed the parameter P = 32 filters, we analyze the different results considering sounds with one or two overlaps.\\
-    Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one overlap (in splits ov2, the scores are slightly higher). In fact, having two different sound sources in the same time instant makes the problem of detecting and localizing the sources a lot more complex to solve for the network.\\
+    Of course, the models trained on the dataset with two overlaps performs worse than the models trained on the dataset with only one 
+    overlap (in splits ov2, the scores are slightly higher). In fact, having two different sound sources in the same time instant makes
+    the problem of detecting and localizing the sources a lot more complex to solve for the network.\\
     \\
     Then we compared the QCNN with P = 32 filters and P = 16 filters.\\
-    The reduction of the number of parameters results in poor performance in the proposed method, infact, we discovered that the network with P = 32 filters in the QCNN layers performs slightly better than the model with only 16 filters.\\
+    The reduction of the number of parameters results in poor performance in the proposed method, infact, we discovered that the 
+    network with P = 32 filters in the QCNN layers performs slightly better than the model with only 16 filters.\\
     \\ 
-    Finally we thought it could be interesting to compare the results obtained with a SELDnet architecture based on normal convolutional layer.\\
+    Finally we thought it could be interesting to compare the results obtained with a SELDnet architecture based on normal 
+    convolutional layer.\\
     We set the parameters of the various models so that we find ourselves in similar situations that we can compare.\\
-    Overall, as we expected, results have proved that the use of quaternion-valued acoustic intensity vector as input features leads to an improvement of 3D SELD performance in challenging environments compared to.\\
+    Overall, as we expected, results have proved that the use of quaternion-valued acoustic intensity vector as input features 
+    leads to an improvement of 3D SELD performance in challenging environments compared to.\\
 \end{document}
