@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1584441086 "c:/Users/sveva/Desktop/DQNN/Report/report.tex" "c:/Users/sveva/Desktop/DQNN/Report/report.pdf" "report" 1584441140
-  "c:/Users/sveva/Desktop/DQNN/Report/report.aux" 1584441088 4280 1a0cf0f3980dcfff507c8a01b606816b ""
-  "c:/Users/sveva/Desktop/DQNN/Report/report.tex" 1584441137 35207 dc22b0396a5cf6d3c913bb99174524dd ""
+["pdflatex"] 1584523025 "c:/Users/sveva/Desktop/DQNN/Report/report.tex" "c:/Users/sveva/Desktop/DQNN/Report/report.pdf" "report" 1584523035
+  "c:/Users/sveva/Desktop/DQNN/Report/report.aux" 1584523027 4280 140c462c81b4bf8dc693b9ecd9a0a9aa ""
+  "c:/Users/sveva/Desktop/DQNN/Report/report.tex" 1584523032 36202 dbaacea5bd5af911480a172f56bf73d6 ""
   "c:/texlive/2018/texmf-dist/fonts/map/fontname/texfonts.map" 1551375520 3332 103109f5612ad95229751940c61aada0 ""
   "c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1551373775 1004 54797486969f23fa377b128694d548df ""
   "c:/texlive/2018/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1551373775 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -112,13 +112,13 @@
   "images/seld_score.png" 1583257773 20147 b0781b72c1c9fcce6711b9fa7b715f4a ""
   "images/seld_score_ov1.png" 1583404686 21721 298eda30b23b8d5315f48b33e73313ad ""
   "images/seld_score_ov2.png" 1583407486 25198 0843634a3e9c72dfd9b2afdfc55d3e3e ""
-  "report.aux" 1584441088 4280 1a0cf0f3980dcfff507c8a01b606816b ""
-  "report.out" 1584441088 442 e57cc0b669e47a118cb55fafee44567e ""
-  "report.tex" 1584441137 35207 dc22b0396a5cf6d3c913bb99174524dd ""
+  "report.aux" 1584523027 4280 140c462c81b4bf8dc693b9ecd9a0a9aa ""
+  "report.out" 1584523027 442 e57cc0b669e47a118cb55fafee44567e ""
+  "report.tex" 1584523032 36202 dbaacea5bd5af911480a172f56bf73d6 ""
   (generated)
-  "report.aux"
-  "report.out"
   "c:/Users/sveva/Desktop/DQNN/Report/report.pdf"
+  "report.aux"
   "report.pdf"
-  "report.log"
   "c:/Users/sveva/Desktop/DQNN/Report/report.log"
+  "report.out"
+  "report.log"
