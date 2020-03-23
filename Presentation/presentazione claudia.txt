@@ -1,0 +1,28 @@
+L'obiettivo principale del nostro lavoro, era quindi quello di allenare la rete a quaternioni sul dato dataset.
+Ciò che abbiamo fatto infatti è stato dividere il dataset in file audio con un overlap (quindi con una sovrapposizione) e file audio con due overlap, per poter analizzare i risultati ottenuti e quindi le performance della rete in condizioni diverse.
+
+Abbiamo trainato la rete sull'intero dataset con l'obiettivo di ottenere prestazioni migliori rispetto ad allenarla sui singoli split, perché la rete trainata su tutto il dataset viene allenata su una quantità maggiore di dati e quindi riesce a generalizzare meglio rispetto ad una allenata su un singolo split.
+
+In particolare abbiamo allenato un modello della rete quaternionica a 32 filtri (il numero dei filtri stabilisce il numero di matrici quaternioniche che vengono passate come parametro ai layer convoluzionali della rete) per circa 150 epoche, dove ogni epoca ha avuto durata più o meno di 30 minuti.
+I risultati ottenuti sono quelli mostrati nel grafico e nella tabella seguente:
+Da ciò che si evince dal grafico, i risultati ottenuti allenando la rete sul dataset con file audio con 1 ov sono migliori rispetto all'altro caso... cosa che in realtà teoricamente ci saremmo aspettati perché classificare e/o localizzare un suono generato da una singola sorgente è sicuramente un task più semplice piuttosto che localizzare e classificare suoni generati da due sorgenti che agiscono contemporaneamente.
+ANALIZZA RISULTATI TABELLA.
+
+SLIDE
+
+Completato il nostro obiettivo, abbiamo pensato che potesse essere interessante, ma soprattutto istruttivo per noi, ampliare il nostro progetto provando a confrontare i risultati ottenuti prima con un modello della stessa rete ma con un numero diverso di filtri, poi con quelli ottenuti allenando una rete diversa sullo stesso dataset.
+In particolare abbiamo condotto due esperimenti separati:
+Nel primo abbiamo allenato un modello della rete quaternionica ma questa volta a 16 filtri, lasciando però invariati tutti gli altri parametri. Questo porta ad una conseguente e ovvia riduzione del numero dei parametri del modello: nel modello con P = 16 filtri ci sono circa 270k parametri trainabili, nel modello con P = 32 ci sono circa 425k parametri), e abbiamo analizzato i risultati ottenuti con entrambi i dataset (1ov e 2 ov).
+
+Nel secondo esperimento, abbiamo comparato la nostra rete con l'approccio tradizionale che si utilizza in questo tipo di problemi, una cosiddetta SELDnet basata su normali layer convoluzionali ricorrenti (COSA CAMBIA TRA LE DUE RETI?).
+Abbiamo trovato un progetto di un gruppo di ricercatori e abbiamo trainato la rete da loro sviluppata sullo stesso dataset (TAU Spatial Sound Events 2019 - Ambisonic), distinguendo file con una e due sovrapposizioni con l'obiettivo di evidenziare le differenze prestazioni tra i due approcci.
+
+Abbiamo dovuto apportare alcune modifiche alla nuova rete per adattarla alle nostre esigenze. Ad esempio non abbiamo potuto estrarre le features allo stesso modo di QCRNN perché la nuova rete prevede input diversi: mentre la nostra rete prevede come input dei quaternioni, il modello tradizionale prevede come input delle trasformate di Fourier. Per questo motivo, abbiamo dovuto eseguire due diversi script per estrarre le features in due modi diversi. 
+Un'altra cosa da fare è stata dividere il dataset nello stesso modo in cui facevamo prima, per addestrare i modelli sugli stessi set di file audio.
+Per il resto abbiamo lasciato invariati i parametri predefiniti impostati dagli sviluppatori nel loro lavoro con SELDnet (T = 128, M = 2048, C = 4, P = 64, MP1 = MP2 = 8, MP3 = 4, Q = R = 128, N = 11).
+
+Per fornire un confronto equo, abbiamo scelto una configurazione, tra le due precedenti, tale da avere un numero comparabile di parametri per entrambi i modelli. 
+In particolare, abbiamo utilizzato la configurazione vincente del nostro primo esperimento (filtri P = 32), al fine di avere circa 425k parametri per la rete di quaternioni proposta e circa 461k parametri per SELDnet, quindi il numero di parametri è molto simile e in questo modo i risultati ottenuti sono comparabili. 
+
+ANALIZZA I GRAFICI E LE TABELLE
+Sottolinea il fatto che le differenze di performance tra quello da 16 e quello da 32 non sono così evidenti perché il dataset non è grandissimo, forse con una maggiore quantità di dati la differenza sarebbe stata più evidente
